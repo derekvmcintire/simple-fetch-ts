@@ -1,4 +1,4 @@
-import { FetchTsResult } from "../types";
+import { FetchTsResponse } from "../types";
 
 /**
  * Performs a typed fetch request to the specified URL.
@@ -6,7 +6,7 @@ import { FetchTsResult } from "../types";
  * @returns A promise that resolves with the fetched data, status, and headers.
  * @throws Will throw an error if the fetch fails or the response is not OK.
  */
-export const typedFetch = async <T>(url: string): Promise<FetchTsResult<T>> => {
+export const typedFetch = async <T>(url: string): Promise<FetchTsResponse<T>> => {
   try {
     const response = await fetch(url);
 
