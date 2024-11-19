@@ -1,0 +1,14 @@
+# Exclude development and testing files
+node_modules/
+tests/
+*.log
+*.tsbuildinfo
+
+# Optional: Exclude source files if not needed for consumers
+src/
+
+# Exclude configuration and tooling files
+tsconfig.json
+.prettierrc
+package-lock.json
+yarn.lock
