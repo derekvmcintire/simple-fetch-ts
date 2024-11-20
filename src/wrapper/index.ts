@@ -103,7 +103,10 @@ export class FetchWrapper {
 
   async fetch<T>(): Promise<FetchTsResponse<T>> {
     const fullUrl = this.buildUrl();
-    return this.handleRequest(() => tsFetch<T>(fullUrl), "GET");
+    return this.handleRequest(
+      () => tsFetch<T>(fullUrl, this.requestHeaders),
+      "GET",
+    );
   }
 
   async post<T>(): Promise<FetchTsResponse<T>> {

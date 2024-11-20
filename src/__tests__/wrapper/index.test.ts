@@ -128,7 +128,7 @@ describe("FetchWrapper", () => {
 
     it("should call the correct request function for GET", async () => {
       const response = await fetchWrapper.params(mockParams).fetch();
-      expect(tsFetch).toHaveBeenCalledWith(`${mockUrl}?page=1&limit=10`);
+      expect(tsFetch).toHaveBeenCalledWith(`${mockUrl}?page=1&limit=10`, {});
       expect(response).toEqual(mockResponse);
     });
 

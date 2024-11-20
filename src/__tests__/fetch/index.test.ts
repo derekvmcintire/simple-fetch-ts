@@ -26,7 +26,10 @@ describe("typedFetch", () => {
       status: 200,
       headers: mockResponse.headers,
     });
-    expect(fetch).toHaveBeenCalledWith("/test-url");
+    expect(fetch).toHaveBeenCalledWith("/test-url", {
+      headers: {},
+      method: "GET",
+    });
   });
 
   it("should throw an error for non-200 responses", async () => {

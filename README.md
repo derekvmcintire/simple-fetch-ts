@@ -66,6 +66,22 @@ import { simple } from "simple-fetch-ts";
 
 ---
 
+## SimpleTsFetch
+
+If you want an inflexible, but quick way to make a simple fetch request, you can use simpleTsFetch. simpleFetch skips the response object and returns your parsed
+data directly. It uses the same fetch helper as the factory function, handling errors internally.
+
+```typescript
+import { simpleTsFetch } from "simple-fetch-ts";
+
+const response = await simpleTsFetch<MyResponseType[]>(
+  "https://api.example.com/resource",
+);
+console.log(response);
+```
+
+---
+
 ## API Reference
 
 ### `simple(url: string): FetchWrapper`
@@ -170,7 +186,9 @@ interface FetchTsResponse<T> {
 
 ---
 
-## Example
+## Examples
+
+### Step By Step
 
 ```typescript
 import { simple } from "simple-fetch-ts";
@@ -192,11 +210,85 @@ console.log("Status:", response.status);
 console.log("Headers:", response.headers);
 ```
 
+### Simple Post
+
+```typeScript
+const result = await simple("https://api.example.com/resource").body({ name: "example", location: "example" }).post<ExpectedReturnType>();
+return result.data;
+```
+
+### Equivelant Code Using Native Fetch
+
+```typescript
+const url = "https://api.example.com/resource";
+try {
+  const response = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify({ name: "example", location: "example" }),
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!response.ok) {
+    return {
+      error: `Network response status ${response.status} with url ${url}`,
+    };
+  }
+  const parsedResponse: ExpectedReturnType = await response.json();
+  return parsedResponse;
+} catch (error: unknown) {
+  throw new Error(
+    error instanceof Error ? error.message : "An unknown error occurred",
+  );
+}
+```
+
 ---
 
 ## Error Handling
 
 The library ensures consistent error messages for invalid configurations or failed requests. Errors are thrown as `Error` objects with detailed messages.
+
+---
+
+## tsFetch Function
+
+Both `simpleTsFetch()` and `simple.fetch()` use `tsFetch()`:
+
+```typescript
+/**
+ * Performs a typed fetch request to the specified URL.
+ * @param url - The URL to fetch data from.
+ * @returns A promise that resolves with the fetched data, status, and headers.
+ * @throws Will throw an error if the fetch fails or the response is not OK.
+ */
+export const tsFetch = async <T>(
+  url: string,
+  requestHeaders: HeadersInit = {},
+): Promise<FetchTsResponse<T>> => {
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { ...requestHeaders },
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Network response status ${response.status} with URL: ${url}`,
+      );
+    }
+
+    const data: T = await response.json();
+    return {
+      data,
+      status: response.status,
+      headers: response.headers,
+    };
+  } catch (error: unknown) {
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    );
+  }
+};
+```
 
 ---
 
