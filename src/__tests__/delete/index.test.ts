@@ -1,5 +1,4 @@
-import { tsDelete } from ".";
-import { FetchTsResponse } from "../types";
+import { tsDelete } from "../../delete";
 
 // Mocking the global fetch function
 global.fetch = jest.fn();
