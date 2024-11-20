@@ -1,4 +1,4 @@
-export interface FetchTsResponse<T> {
+export interface SimpleResponse<T> {
   data: T;
   status: number;
   headers: Headers;

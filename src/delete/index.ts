@@ -1,4 +1,4 @@
-import { FetchTsResponse } from "../types";
+import { SimpleResponse } from "../types";
 
 /**
  * Performs a typed DELETE request to the specified URL.
@@ -10,7 +10,7 @@ import { FetchTsResponse } from "../types";
 export const tsDelete = async <T>(
   url: string,
   requestHeaders: HeadersInit = {},
-): Promise<FetchTsResponse<T>> => {
+): Promise<SimpleResponse<T>> => {
   try {
     const response = await fetch(url, {
       method: "DELETE",

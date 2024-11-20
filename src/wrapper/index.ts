@@ -4,7 +4,7 @@ import { tsPatch } from "../patch";
 import { tsPost } from "../post";
 import { tsPut } from "../put";
 import { QueryParams, serializeQueryParams } from "../utility/helpers";
-import { FetchTsResponse } from "../types";
+import { SimpleResponse } from "../types";
 
 /**
  * FetchWrapper
@@ -68,9 +68,9 @@ export class FetchWrapper {
   }
 
   private async handleRequest<T>(
-    requestFn: () => Promise<FetchTsResponse<T>>,
+    requestFn: () => Promise<SimpleResponse<T>>,
     method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
-  ): Promise<FetchTsResponse<T>> {
+  ): Promise<SimpleResponse<T>> {
     // Validate requestBody usage
     if (
       !["POST", "PUT", "PATCH", "DELETE"].includes(method) &&
@@ -101,7 +101,7 @@ export class FetchWrapper {
     }
   }
 
-  async fetch<T>(): Promise<FetchTsResponse<T>> {
+  async fetch<T>(): Promise<SimpleResponse<T>> {
     const fullUrl = this.buildUrl();
     return this.handleRequest(
       () => tsFetch<T>(fullUrl, this.requestHeaders),
@@ -109,28 +109,28 @@ export class FetchWrapper {
     );
   }
 
-  async post<T>(): Promise<FetchTsResponse<T>> {
+  async post<T>(): Promise<SimpleResponse<T>> {
     return this.handleRequest(
       () => tsPost<T>(this.buildUrl(), this.requestBody, this.requestHeaders),
       "POST",
     );
   }
 
-  async put<T>(): Promise<FetchTsResponse<T>> {
+  async put<T>(): Promise<SimpleResponse<T>> {
     return this.handleRequest(
       () => tsPut<T>(this.buildUrl(), this.requestBody, this.requestHeaders),
       "PUT",
     );
   }
 
-  async patch<T>(): Promise<FetchTsResponse<T>> {
+  async patch<T>(): Promise<SimpleResponse<T>> {
     return this.handleRequest(
       () => tsPatch<T>(this.buildUrl(), this.requestBody, this.requestHeaders),
       "PATCH",
     );
   }
 
-  async delete<T>(): Promise<FetchTsResponse<T>> {
+  async delete<T>(): Promise<SimpleResponse<T>> {
     return this.handleRequest(
       () => tsDelete<T>(this.buildUrl(), this.requestHeaders),
       "DELETE",

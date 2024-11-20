@@ -1,5 +1,5 @@
 import { tsPatch } from "../../patch";
-import { FetchTsResponse } from "../../types";
+import { SimpleResponse } from "../../types";
 
 // Mocking the global fetch function
 global.fetch = jest.fn();
@@ -25,7 +25,7 @@ describe("tsPatch", () => {
     const requestBody = { name: "John Doe" };
     const requestHeaders = { Authorization: "Bearer token" };
 
-    const result: FetchTsResponse<typeof mockData> = await tsPatch(
+    const result: SimpleResponse<typeof mockData> = await tsPatch(
       url,
       requestBody,
       requestHeaders,

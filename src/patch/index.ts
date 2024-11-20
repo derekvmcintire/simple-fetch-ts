@@ -1,4 +1,4 @@
-import { FetchTsResponse } from "../types";
+import { SimpleResponse } from "../types";
 
 /**
  * Performs a typed PATCH request to the specified URL.
@@ -12,7 +12,7 @@ export const tsPatch = async <T>(
   url: string,
   requestBody: any,
   requestHeaders: HeadersInit = {},
-): Promise<FetchTsResponse<T>> => {
+): Promise<SimpleResponse<T>> => {
   try {
     const response = await fetch(url, {
       method: "PATCH",

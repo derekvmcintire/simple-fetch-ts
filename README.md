@@ -1,4 +1,4 @@
-# Documentation for `simple-fetch-ts`
+# Documentation
 
 `simple-fetch-ts` is a TypeScript library designed to simplify HTTP requests using a builder-pattern approach. It provides a fluent API for creating, configuring, and executing various HTTP methods (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`) with type safety and centralized error handling.
 
@@ -124,23 +124,23 @@ constructor(url: string, defaultHeaders?: HeadersInit)
 
 - Sets the request body. Automatically assigns `Content-Type: application/json` if not provided.
 
-##### `fetch<T>(): Promise<FetchTsResponse<T>>`
+##### `fetch<T>(): Promise<SimpleResponse<T>>`
 
 - Executes a `GET` request.
 
-##### `post<T>(): Promise<FetchTsResponse<T>>`
+##### `post<T>(): Promise<SimpleResponse<T>>`
 
 - Executes a `POST` request with the configured body and headers.
 
-##### `put<T>(): Promise<FetchTsResponse<T>>`
+##### `put<T>(): Promise<SimpleResponse<T>>`
 
 - Executes a `PUT` request with the configured body and headers.
 
-##### `patch<T>(): Promise<FetchTsResponse<T>>`
+##### `patch<T>(): Promise<SimpleResponse<T>>`
 
 - Executes a `PATCH` request with the configured body and headers.
 
-##### `delete<T>(): Promise<FetchTsResponse<T>>`
+##### `delete<T>(): Promise<SimpleResponse<T>>`
 
 - Executes a `DELETE` request with the configured headers.
 
@@ -150,23 +150,23 @@ constructor(url: string, defaultHeaders?: HeadersInit)
 
 The library includes helper functions for low-level HTTP requests. These are internally used by `FetchWrapper`.
 
-### `tsFetch<T>(url: string): Promise<FetchTsResponse<T>>`
+### `tsFetch<T>(url: string): Promise<SimpleResponse<T>>`
 
 Performs a `GET` request.
 
-### `tsPost<T>(url: string, requestBody: any, requestHeaders?: HeadersInit): Promise<FetchTsResponse<T>>`
+### `tsPost<T>(url: string, requestBody: any, requestHeaders?: HeadersInit): Promise<SimpleResponse<T>>`
 
 Performs a `POST` request.
 
-### `tsPut<T>(url: string, requestBody: any, requestHeaders?: HeadersInit): Promise<FetchTsResponse<T>>`
+### `tsPut<T>(url: string, requestBody: any, requestHeaders?: HeadersInit): Promise<SimpleResponse<T>>`
 
 Performs a `PUT` request.
 
-### `tsPatch<T>(url: string, requestBody: any, requestHeaders?: HeadersInit): Promise<FetchTsResponse<T>>`
+### `tsPatch<T>(url: string, requestBody: any, requestHeaders?: HeadersInit): Promise<SimpleResponse<T>>`
 
 Performs a `PATCH` request.
 
-### `tsDelete<T>(url: string, requestHeaders?: HeadersInit): Promise<FetchTsResponse<T>>`
+### `tsDelete<T>(url: string, requestHeaders?: HeadersInit): Promise<SimpleResponse<T>>`
 
 Performs a `DELETE` request.
 
@@ -174,10 +174,10 @@ Performs a `DELETE` request.
 
 ## Types
 
-### `FetchTsResponse<T>`
+### `SimpleResponse<T>`
 
 ```typescript
-interface FetchTsResponse<T> {
+interface SimpleResponse<T> {
   data: T;
   status: number;
   headers: Headers;
@@ -263,7 +263,7 @@ Both `simpleTsFetch()` and `simple.fetch()` use `tsFetch()`:
 export const tsFetch = async <T>(
   url: string,
   requestHeaders: HeadersInit = {},
-): Promise<FetchTsResponse<T>> => {
+): Promise<SimpleResponse<T>> => {
   try {
     const response = await fetch(url, {
       method: "GET",
