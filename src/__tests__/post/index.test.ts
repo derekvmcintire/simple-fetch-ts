@@ -1,5 +1,5 @@
-import { tsPost } from ".";
-import { FetchTsResponse } from "../types";
+import { tsPost } from "../../post";
+import { FetchTsResponse } from "../../types";
 
 // Mocking the global fetch function
 global.fetch = jest.fn();

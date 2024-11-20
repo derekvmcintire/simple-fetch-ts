@@ -1,10 +1,10 @@
-import { FetchWrapper } from ".";
-import { tsFetch } from "../fetch";
-import { tsPost } from "../post";
-import { tsPut } from "../put";
-import { tsPatch } from "../patch";
-import { tsDelete } from "../delete";
-import { serializeQueryParams } from "../utility/helpers";
+import { FetchWrapper } from "../../wrapper";
+import { tsFetch } from "../../fetch";
+import { tsPost } from "../../post";
+import { tsPut } from "../../put";
+import { tsPatch } from "../../patch";
+import { tsDelete } from "../../delete";
+import { serializeQueryParams } from "../../utility/helpers";
 
 const mockResponse = {
   data: { message: "response" }, // Mocked data
@@ -15,7 +15,7 @@ const mockResponse = {
 };
 
 // Mock the helper functions
-jest.mock("../fetch", () => ({
+jest.mock("../../fetch", () => ({
   tsFetch: jest.fn().mockResolvedValue({
     data: { message: "response" }, // Mocked data
     status: 200, // Mocked status code
@@ -24,7 +24,7 @@ jest.mock("../fetch", () => ({
     }),
   }),
 }));
-jest.mock("../post", () => ({
+jest.mock("../../post", () => ({
   tsPost: jest.fn().mockResolvedValue({
     data: { message: "response" }, // Mocked data
     status: 200, // Mocked status code
@@ -33,7 +33,7 @@ jest.mock("../post", () => ({
     }),
   }),
 }));
-jest.mock("../put", () => ({
+jest.mock("../../put", () => ({
   tsPut: jest.fn().mockResolvedValue({
     data: { message: "response" }, // Mocked data
     status: 200, // Mocked status code
@@ -42,7 +42,7 @@ jest.mock("../put", () => ({
     }),
   }),
 }));
-jest.mock("../patch", () => ({
+jest.mock("../../patch", () => ({
   tsPatch: jest.fn().mockResolvedValue({
     data: { message: "response" }, // Mocked data
     status: 200, // Mocked status code
@@ -51,7 +51,7 @@ jest.mock("../patch", () => ({
     }),
   }),
 }));
-jest.mock("../delete", () => ({
+jest.mock("../../delete", () => ({
   tsDelete: jest.fn().mockResolvedValue({
     data: { message: "response" }, // Mocked data
     status: 200, // Mocked status code

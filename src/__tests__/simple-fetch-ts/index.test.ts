@@ -1,7 +1,7 @@
-import { simpleTsFetch } from ".";
-import { tsFetch } from "../fetch";
+import { simpleTsFetch } from "../../simple-fetch-ts";
+import { tsFetch } from "../../fetch";
 
-jest.mock("../fetch"); // Mock the entire module
+jest.mock("../../fetch"); // Mock the entire module
 
 describe("simpleTsFetch", () => {
   afterEach(() => {
