@@ -1,5 +1,5 @@
 import { FetchWrapper } from "../wrapper";
-import { isValidURL } from "./helpers";
+import { isValidURL } from "../utility/helpers";
 
 // Factory function
 export const simple = (url: string) => {
