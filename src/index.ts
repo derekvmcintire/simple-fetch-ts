@@ -1,2 +1,2 @@
-export * from "./fetch-ts";
+export * from "./fetch";
 export * from "./simple-fetch-ts";

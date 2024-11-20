@@ -1,4 +1,4 @@
-import { typedFetch } from "../fetch-ts";
+import { tsFetch } from "../fetch";
 
 /**
  * Fetches data from the given URL and returns the data part of the response.
@@ -7,7 +7,7 @@ import { typedFetch } from "../fetch-ts";
  * @throws Will throw an error if the fetch fails or the response is not OK.
  */
 export const simpleTsFetch = async <T>(url: string): Promise<T> => {
-  const result = await typedFetch<T>(url);
+  const result = await tsFetch<T>(url);
   if (!result?.data) {
     throw new Error(`No data returned from the fetch for URL: ${url}`);
   }

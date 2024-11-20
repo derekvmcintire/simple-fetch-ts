@@ -1,4 +1,4 @@
-import { typedFetch } from ".";
+import { tsFetch } from ".";
 
 // Mock the fetch API
 global.fetch = jest.fn();
@@ -19,7 +19,7 @@ describe("typedFetch", () => {
 
     (fetch as jest.Mock).mockResolvedValueOnce(mockResponse);
 
-    const result = await typedFetch("/test-url");
+    const result = await tsFetch("/test-url");
 
     expect(result).toEqual({
       data: mockData,
@@ -37,7 +37,7 @@ describe("typedFetch", () => {
 
     (fetch as jest.Mock).mockResolvedValueOnce(mockResponse);
 
-    await expect(typedFetch("/test-url")).rejects.toThrow(
+    await expect(tsFetch("/test-url")).rejects.toThrow(
       "Network response status 404 with URL: /test-url",
     );
   });
@@ -46,13 +46,13 @@ describe("typedFetch", () => {
     const errorMessage = "Network error";
     (fetch as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
 
-    await expect(typedFetch("/test-url")).rejects.toThrow(errorMessage);
+    await expect(tsFetch("/test-url")).rejects.toThrow(errorMessage);
   });
 
   it("should handle unknown errors", async () => {
     (fetch as jest.Mock).mockRejectedValueOnce("Some unknown error");
 
-    await expect(typedFetch("/test-url")).rejects.toThrow(
+    await expect(tsFetch("/test-url")).rejects.toThrow(
       "An unknown error occurred",
     );
   });
