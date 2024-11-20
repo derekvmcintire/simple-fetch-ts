@@ -19,7 +19,7 @@ try {
 
   if (!response.ok) {
     throw new Error(
-      `Network response status ${response.status} with URL: ${url}`,
+      `Network response status ${response.status} with URL: ${url}`
     );
   }
 
@@ -27,7 +27,37 @@ try {
   return data;
 } catch (error: unknown) {
   throw new Error(
-    error instanceof Error ? error.message : "An unknown error occurred",
+    error instanceof Error ? error.message : "An unknown error occurred"
   );
 }
+```
+
+```typescript
+import { simple } from "simple-fetch-ts";
+
+// POST Request:
+const response = await simple("www.my/url")
+  .body({ mydata: "myData" })
+  .headers({ Authorization: "Bearer token" })
+  .post<MyDataShape>()
+  .then((response: FetchTsResponse) => {
+    console.log("Success:", response);
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
+
+return response;
+
+// GET Request:
+const response = await simple("www.my/url?limit=100")
+  .fetch<MyDataShape>()
+  .then((response: FetchTsResponse) => {
+    console.log("success: ", response);
+  })
+  .catch((error) => {
+    console.log("Error: ", error);
+  });
+
+return response;
 ```
