@@ -19,7 +19,7 @@ try {
 
   if (!response.ok) {
     throw new Error(
-      `Network response status ${response.status} with URL: ${url}`
+      `Network response status ${response.status} with URL: ${url}`,
     );
   }
 
@@ -27,7 +27,7 @@ try {
   return data;
 } catch (error: unknown) {
   throw new Error(
-    error instanceof Error ? error.message : "An unknown error occurred"
+    error instanceof Error ? error.message : "An unknown error occurred",
   );
 }
 ```
