@@ -24,19 +24,31 @@ export const validateQueryParams = (params: unknown): void => {
 };
 
 export const serializeQueryParams = (params: QueryParams): string => {
-  validateQueryParams(params); // Validate before serializing
+  validateQueryParams(params); // Ensure all parameters are valid
+
+  // Serialize the valid parameters into the query string
   return Object.entries(params)
-    .filter(([, value]) => value !== undefined && value !== null) // Exclude undefined and null
-    .map(([key, value]) =>
-      Array.isArray(value)
-        ? value
-            .map(
-              (item) =>
-                `${encodeURIComponent(key)}=${encodeURIComponent(String(item))}`,
-            )
-            .join("&")
-        : `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`,
-    )
+    .map(([key, value]) => {
+      // Check if the value is valid (not null or undefined)
+      if (value === null || value === undefined) {
+        throw new Error(
+          `Invalid query parameter value for key "${key}": null or undefined is not allowed.`,
+        );
+      }
+
+      // Handle array values as repeated key-value pairs
+      if (Array.isArray(value)) {
+        return value
+          .map(
+            (item) =>
+              `${encodeURIComponent(key)}=${encodeURIComponent(String(item))}`,
+          )
+          .join("&");
+      }
+
+      // Handle regular string/number values
+      return `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`;
+    })
     .join("&");
 };
 

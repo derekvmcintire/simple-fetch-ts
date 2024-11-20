@@ -3,7 +3,7 @@ import { tsFetch } from "../fetch";
 import { tsPatch } from "../patch";
 import { tsPost } from "../post";
 import { tsPut } from "../put";
-import { QueryParams, serializeQueryParams } from "../simple/helpers";
+import { QueryParams, serializeQueryParams } from "../utility/helpers";
 import { FetchTsResponse } from "../types";
 
 /**
@@ -61,6 +61,12 @@ export class FetchWrapper {
     return this.requestParams ? `${this.url}?${this.requestParams}` : this.url;
   }
 
+  private isHeadersRecord(
+    headers: HeadersInit,
+  ): headers is Record<string, string> {
+    return typeof headers === "object" && !(headers instanceof Headers);
+  }
+
   private async handleRequest<T>(
     requestFn: () => Promise<FetchTsResponse<T>>,
     method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
@@ -74,25 +80,22 @@ export class FetchWrapper {
     }
 
     // Validate headers if needed
-    if (
-      typeof this.requestHeaders === "object" &&
-      !(this.requestHeaders instanceof Headers)
-    ) {
-      const headersRecord = this.requestHeaders as Record<string, string>;
+    if (this.isHeadersRecord(this.requestHeaders)) {
+      // Now TypeScript knows this.requestHeaders is a Record<string, string>
+      const headersRecord = this.requestHeaders;
+
+      // Check for Content-Type header
       if (!headersRecord["Content-Type"] && this.requestBody) {
-        // @TODO consider better logging strategies
-        console.warn(
-          `Request body detected without Content-Type header. Defaulting to application/json.`,
-        );
         headersRecord["Content-Type"] = "application/json";
       }
-      this.requestHeaders = headersRecord;
+
+      // Here we need to explicitly cast `headersRecord` back to `HeadersInit`
+      this.requestHeaders = headersRecord as HeadersInit; // Cast it explicitly
     }
 
     try {
       return await requestFn();
     } catch (error) {
-      // @TODO consider better logging strategies
       console.error(`Error with ${method} request to ${this.url}:`, error);
       throw error;
     }
