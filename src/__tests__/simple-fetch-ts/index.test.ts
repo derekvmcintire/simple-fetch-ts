@@ -12,10 +12,14 @@ describe("simpleTsFetch", () => {
     const mockData = { id: 1, name: "Test" };
     (tsFetch as jest.Mock).mockResolvedValueOnce({ data: mockData });
 
-    const result = await simpleTsFetch("/test-url");
+    const result = await simpleTsFetch("/test-url", {
+      Authorization: "Bearer Token",
+    });
 
     expect(result).toEqual(mockData);
-    expect(tsFetch).toHaveBeenCalledWith("/test-url");
+    expect(tsFetch).toHaveBeenCalledWith("/test-url", {
+      Authorization: "Bearer Token",
+    });
   });
 
   it("should throw an error when typedFetch fails", async () => {
