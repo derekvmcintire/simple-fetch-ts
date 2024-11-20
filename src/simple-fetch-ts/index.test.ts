@@ -1,7 +1,7 @@
 import { simpleTsFetch } from ".";
 import { tsFetch } from "../fetch";
 
-jest.mock("../fetch-ts"); // Mock the entire module
+jest.mock("../fetch"); // Mock the entire module
 
 describe("simpleTsFetch", () => {
   afterEach(() => {
@@ -28,7 +28,9 @@ describe("simpleTsFetch", () => {
   it("should throw an error when typedFetch returns an unexpected result", async () => {
     (tsFetch as jest.Mock).mockResolvedValueOnce({ data: undefined });
 
-    await expect(simpleTsFetch("/test-url")).resolves.toBeUndefined();
-    expect(tsFetch).toHaveBeenCalledWith("/test-url");
+    // We expect an error to be thrown since the fetch response contains no data
+    await expect(simpleTsFetch("/test-url")).rejects.toThrow(
+      "No data returned from the fetch for URL: /test-url",
+    );
   });
 });
