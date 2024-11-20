@@ -7,7 +7,7 @@ import { tsFetch } from "../fetch";
  * @returns The data returned from the fetch.
  * @throws Will throw an error if the fetch fails or the response is not OK.
  */
-export const simpleTsFetch = async <T>(
+export const simpleFetch = async <T>(
   url: string,
   requestHeaders: HeadersInit = {},
 ): Promise<T> => {
