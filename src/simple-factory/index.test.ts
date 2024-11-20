@@ -1,4 +1,4 @@
-import { simple } from "../simple";
+import { simple } from ".";
 import { FetchWrapper } from "../wrapper";
 import { isValidURL } from "../utility/helpers";
 
