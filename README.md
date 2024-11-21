@@ -39,7 +39,7 @@ import { simple } from "simple-fetch-ts";
    Use the `simple` factory function to validate the URL and instantiate a `FetchWrapper`.
 
    ```typescript
-   import { simple } from "simple-fetch-ts";
+   import { QueryParams, simple } from "simple-fetch-ts";
 
    const api = simple("https://api.example.com/resource");
    ```
@@ -49,9 +49,10 @@ import { simple } from "simple-fetch-ts";
    Chain methods to configure headers, query parameters, and request body:
 
    ```typescript
+   const params: QueryParams = { page: 1, limit: 10 };
    const wrapper = api
      .headers({ Authorization: "Bearer token" })
-     .params({ page: 1, limit: 10 })
+     .params(params)
      .body({ name: "example" });
    ```
 
@@ -60,8 +61,9 @@ import { simple } from "simple-fetch-ts";
    Choose an HTTP method to execute the request:
 
    ```typescript
-   const response = await wrapper.post<MyResponseType>();
-   console.log(response.data);
+   const response = await wrapper.post<ExpectedReturnType>();
+   const myData = response.data;
+   console.log(myData);
    ```
 
 ---
@@ -74,8 +76,8 @@ data directly. It uses the same fetch helper as the factory function, handling e
 ```typescript
 import { simpleTsFetch } from "simple-fetch-ts";
 
-const response = await simpleTsFetch<MyResponseType[]>(
-  "https://api.example.com/resource",
+const response = await simpleTsFetch<ExpectedReturnType[]>(
+  "https://api.example.com/resource"
 );
 console.log(response);
 ```
@@ -242,7 +244,7 @@ try {
   return parsedResponse;
 } catch (error: unknown) {
   throw new Error(
-    error instanceof Error ? error.message : "An unknown error occurred",
+    error instanceof Error ? error.message : "An unknown error occurred"
   );
 }
 ```
@@ -268,7 +270,7 @@ Both `simpleTsFetch()` and `simple.fetch()` use `tsFetch()`:
  */
 export const tsFetch = async <T>(
   url: string,
-  requestHeaders: HeadersInit = {},
+  requestHeaders: HeadersInit = {}
 ): Promise<SimpleResponse<T>> => {
   try {
     const response = await fetch(url, {
@@ -278,7 +280,7 @@ export const tsFetch = async <T>(
 
     if (!response.ok) {
       throw new Error(
-        `Network response status ${response.status} with URL: ${url}`,
+        `Network response status ${response.status} with URL: ${url}`
       );
     }
 
@@ -290,7 +292,7 @@ export const tsFetch = async <T>(
     };
   } catch (error: unknown) {
     throw new Error(
-      error instanceof Error ? error.message : "An unknown error occurred",
+      error instanceof Error ? error.message : "An unknown error occurred"
     );
   }
 };
