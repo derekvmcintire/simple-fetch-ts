@@ -1,9 +1,9 @@
 import { simple } from "../../simple-factory";
+import { isValidURL } from "../../utility/url-helpers";
 import { FetchWrapper } from "../../wrapper";
-import { isValidURL } from "../../utility/helpers";
 
 // Mock the isValidURL function
-jest.mock("../../utility/helpers", () => ({
+jest.mock("../../utility/url-helpers", () => ({
   isValidURL: jest.fn(),
 }));
 

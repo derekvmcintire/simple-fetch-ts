@@ -1,4 +1,5 @@
 import { SimpleResponse } from "../types";
+import { getContentType } from "../utility/get-content-type";
 
 /**
  * Performs a typed PATCH request to the specified URL.
@@ -13,11 +14,22 @@ export const tsPatch = async <T>(
   requestBody: any,
   requestHeaders: HeadersInit = {},
 ): Promise<SimpleResponse<T>> => {
+  // Get Content-Type header and ensure it's lowercase
+  const contentType = getContentType(requestHeaders).toLowerCase();
+
+  // Automatically stringify the body if Content-Type is JSON and body is an object
+  const body =
+    contentType === "application/json" &&
+    requestBody &&
+    typeof requestBody === "object"
+      ? JSON.stringify(requestBody)
+      : requestBody;
+
   try {
     const response = await fetch(url, {
       method: "PATCH",
-      body: requestBody ? JSON.stringify(requestBody) : undefined,
-      headers: { "Content-Type": "application/json", ...requestHeaders },
+      body,
+      headers: requestHeaders,
     });
 
     if (!response.ok) {

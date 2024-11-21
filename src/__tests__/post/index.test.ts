@@ -34,9 +34,8 @@ describe("tsPost", () => {
     // Check that the correct fetch call was made
     expect(fetch).toHaveBeenCalledWith(url, {
       method: "POST",
-      body: JSON.stringify(requestBody),
+      body: requestBody,
       headers: {
-        "Content-Type": "application/json",
         Authorization: "Bearer token",
       },
     });
