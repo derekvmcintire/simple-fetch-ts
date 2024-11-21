@@ -14,7 +14,7 @@ export const tsFetch = async <T>(
   try {
     const response = await fetch(url, {
       method: "GET",
-      headers: { ...requestHeaders },
+      headers: requestHeaders,
     });
 
     if (!response.ok) {
