@@ -4,7 +4,7 @@ import { tsPost } from "../../post";
 import { tsPut } from "../../put";
 import { tsPatch } from "../../patch";
 import { tsDelete } from "../../delete";
-import { serializeQueryParams } from "../../utility/helpers";
+import { serializeQueryParams } from "../../utility/url-helpers";
 
 const mockResponse = {
   data: { message: "response" }, // Mocked data
@@ -61,6 +61,10 @@ jest.mock("../../delete", () => ({
   }),
 }));
 
+type MockBody = {
+  name: string;
+};
+
 describe("FetchWrapper", () => {
   let fetchWrapper: FetchWrapper;
   const mockUrl = "https://api.example.com/resource";
@@ -79,7 +83,10 @@ describe("FetchWrapper", () => {
   });
 
   it("should allow method chaining with body, headers, and params", () => {
-    fetchWrapper.body(mockBody).headers(mockHeaders).params(mockParams);
+    fetchWrapper
+      .body<MockBody>(mockBody)
+      .headers(mockHeaders)
+      .params(mockParams);
     expect(fetchWrapper["requestBody"]).toBe(mockBody);
     expect(fetchWrapper["requestHeaders"]).toEqual(mockHeaders);
     expect(fetchWrapper["requestParams"]).toBe(
@@ -95,14 +102,14 @@ describe("FetchWrapper", () => {
 
   describe("handleRequest", () => {
     it("should throw an error for methods that should not have a body", async () => {
-      fetchWrapper.body(mockBody);
+      fetchWrapper.body<MockBody>(mockBody);
       await expect(fetchWrapper.fetch()).rejects.toThrow(
         "GET requests should not have a body.",
       );
     });
 
     it("should add Content-Type header if not present and body is provided", async () => {
-      fetchWrapper.body(mockBody);
+      fetchWrapper.body<MockBody>(mockBody);
       fetchWrapper.headers(new Headers()); // Use new Headers() instead of {}
       await fetchWrapper.post();
       expect(
@@ -113,14 +120,14 @@ describe("FetchWrapper", () => {
     });
 
     it("should call the correct request function for POST", async () => {
-      fetchWrapper.body(mockBody).headers(mockHeaders);
+      fetchWrapper.body<MockBody>(mockBody).headers(mockHeaders);
       const response = await fetchWrapper
-        .body(mockBody)
+        .body<MockBody>(mockBody)
         .headers(mockHeaders)
         .post();
       expect(tsPost).toHaveBeenCalledWith(
         `${mockUrl}`,
-        mockBody,
+        mockBody, // Updated to reflect stringified body
         { ...mockHeaders, "Content-Type": "application/json" }, // Content-Type header is automatically added to requests with a body
       );
       expect(response).toEqual(mockResponse);
@@ -156,22 +163,22 @@ describe("FetchWrapper", () => {
 
   describe("HTTP methods", () => {
     it("should call tsPut for PUT requests", async () => {
-      fetchWrapper.body(mockBody).headers(mockHeaders);
+      fetchWrapper.body<MockBody>(mockBody).headers(mockHeaders);
       const response = await fetchWrapper.put();
       expect(tsPut).toHaveBeenCalledWith(
         `${mockUrl}`,
-        mockBody,
+        mockBody, // Updated to reflect stringified body
         { ...mockHeaders, "Content-Type": "application/json" }, // Content-Type header is automatically added to requests with a body
       );
       expect(response).toEqual(mockResponse);
     });
 
     it("should call tsPatch for PATCH requests", async () => {
-      fetchWrapper.body(mockBody).headers(mockHeaders);
+      fetchWrapper.body<MockBody>(mockBody).headers(mockHeaders);
       const response = await fetchWrapper.patch();
       expect(tsPatch).toHaveBeenCalledWith(
         `${mockUrl}`,
-        mockBody,
+        mockBody, // Updated to reflect stringified body
         { ...mockHeaders, "Content-Type": "application/json" }, // Content-Type header is automatically added to requests with a body
       );
       expect(response).toEqual(mockResponse);

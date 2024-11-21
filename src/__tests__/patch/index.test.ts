@@ -34,9 +34,8 @@ describe("tsPatch", () => {
     // Check that the correct fetch call was made
     expect(fetch).toHaveBeenCalledWith(url, {
       method: "PATCH",
-      body: JSON.stringify(requestBody),
+      body: requestBody,
       headers: {
-        "Content-Type": "application/json",
         Authorization: "Bearer token",
       },
     });

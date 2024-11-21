@@ -3,37 +3,12 @@ import { tsFetch } from "../fetch";
 import { tsPatch } from "../patch";
 import { tsPost } from "../post";
 import { tsPut } from "../put";
-import { serializeQueryParams } from "../utility/helpers";
 import { QueryParams, SimpleResponse } from "../types";
+import { serializeQueryParams } from "../utility/url-helpers";
 
-/**
- * FetchWrapper
- *
- * This class provides a fluent, builder-pattern-based abstraction for making HTTP requests.
- * It simplifies working with various HTTP methods (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`)
- * and allows chaining of configurations such as setting headers, request body, and query parameters.
- *
- * Key Features:
- * - Chainable methods (`body`, `headers`, `params`) for configuring requests.
- * - Automatically handles query parameter serialization.
- * - Ensures proper Content-Type handling for requests with a body.
- * - Centralized error handling and validation for consistent behavior across all requests.
- * - Utilizes helper functions (`tsFetch`, `tsPost`, etc.) to execute requests.
- *
- * Usage:
- * ```typescript
- * const wrapper = new FetchWrapper("https://api.example.com/resource")
- *   .headers({ Authorization: "Bearer token" })
- *   .params({ page: 1, limit: 10 })
- *   .body({ name: "example" });
- *
- * const response = await wrapper.post<MyResponseType>();
- * console.log(response.data);
- * ```
- */
 export class FetchWrapper {
   private url: string;
-  private requestBody: any;
+  private requestBody: unknown = null;
   private requestHeaders: HeadersInit = {};
   private requestParams: string = "";
 
@@ -42,8 +17,8 @@ export class FetchWrapper {
     this.requestHeaders = defaultHeaders;
   }
 
-  body(requestBody: any): this {
-    this.requestBody = requestBody;
+  body<T>(body: T): FetchWrapper {
+    this.requestBody = body;
     return this;
   }
 
@@ -52,8 +27,8 @@ export class FetchWrapper {
     return this;
   }
 
-  params(requestParams: QueryParams): this {
-    this.requestParams = serializeQueryParams(requestParams);
+  params(requestParams: QueryParams, lowerCaseKeys: boolean = false): this {
+    this.requestParams = serializeQueryParams(requestParams, lowerCaseKeys);
     return this;
   }
 
@@ -67,6 +42,16 @@ export class FetchWrapper {
     return typeof headers === "object" && !(headers instanceof Headers);
   }
 
+  private prepareHeaders(): void {
+    if (
+      this.isHeadersRecord(this.requestHeaders) &&
+      !this.requestHeaders["Content-Type"] &&
+      this.requestBody
+    ) {
+      this.requestHeaders["Content-Type"] = "application/json";
+    }
+  }
+
   private async handleRequest<T>(
     requestFn: () => Promise<SimpleResponse<T>>,
     method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
@@ -74,24 +59,12 @@ export class FetchWrapper {
     // Validate requestBody usage
     if (
       !["POST", "PUT", "PATCH", "DELETE"].includes(method) &&
-      this.requestBody
+      this.requestBody !== null
     ) {
       throw new Error(`${method} requests should not have a body.`);
     }
 
-    // Validate headers if needed
-    if (this.isHeadersRecord(this.requestHeaders)) {
-      // Now TypeScript knows this.requestHeaders is a Record<string, string>
-      const headersRecord = this.requestHeaders;
-
-      // Check for Content-Type header
-      if (!headersRecord["Content-Type"] && this.requestBody) {
-        headersRecord["Content-Type"] = "application/json";
-      }
-
-      // Here we need to explicitly cast `headersRecord` back to `HeadersInit`
-      this.requestHeaders = headersRecord as HeadersInit; // Cast it explicitly
-    }
+    this.prepareHeaders();
 
     try {
       return await requestFn();

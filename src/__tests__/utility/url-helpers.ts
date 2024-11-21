@@ -3,7 +3,7 @@ import {
   validateQueryParams,
   serializeQueryParams,
   isValidURL,
-} from "../../utility/helpers";
+} from "../../utility/url-helpers";
 
 describe("validateQueryParams", () => {
   it("should throw an error if params is not a plain object", () => {
@@ -41,8 +41,8 @@ describe("validateQueryParams", () => {
 describe("serializeQueryParams", () => {
   beforeEach(() => {
     // Mock the module containing validateQueryParams and ensure we can mock the function
-    jest.mock("../../utility/helpers", () => ({
-      ...jest.requireActual("../../utility/helpers"), // Retain all other functions as they are
+    jest.mock("../../utility/url-helpers", () => ({
+      ...jest.requireActual("../../utility/url-helpers"), // Retain all other functions as they are
       validateQueryParams: jest.fn(),
     }));
   });
