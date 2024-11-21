@@ -49,11 +49,13 @@ import { simple } from "simple-fetch-ts";
    Chain methods to configure headers, query parameters, and request body:
 
    ```typescript
-   const params: QueryParams = { page: 1, limit: 10 };
+   const myFilters = { page: 1, limit: 10, orderBy: 'id' };
+   const params = myFilters as QueryParams;
+   const convertToLowerCase = true;
    const wrapper = api
      .headers({ Authorization: "Bearer token" })
-     .params(params)
-     .body({ name: "example" });
+     .params(params, convertToLowerCase) // v1.0.5 - added optional flag to convert queryParams to lowercase
+     .body<BodyType>({ name: "example" }); // v1.0.5 - added generic Typing to .body()
    ```
 
 3. **Sending the Request**
@@ -66,17 +68,30 @@ import { simple } from "simple-fetch-ts";
    console.log(myData);
    ```
 
+4. **All Together Now...**
+
+   ```typescript
+   const response = await simple("https://api.example.com/resource")
+      .headers({ Authorization: "Bearer token" })
+      .params(params, convertToLowerCase)
+      .body<BodyType>({ name: "example" })
+      .post<ExpectedReturnType>();
+
+   console.log(response.data)
+   ```
+
 ---
 
-## SimpleTsFetch
+## SimpleFetch
 
 If you want an inflexible, but quick way to make a simple fetch request, you can use simpleTsFetch. simpleFetch skips the response object and returns your parsed
 data directly. It uses the same fetch helper as the factory function, handling errors internally.
 
 ```typescript
-import { simpleTsFetch } from "simple-fetch-ts";
+import { simpleFetch } from "simple-fetch-ts";
 
-const response = await simpleTsFetch<ExpectedReturnType[]>(
+// data is parsed and ready to consume, but there is no access to the response object
+const response = await simpleFetch<ExpectedReturnType[]>(
   "https://api.example.com/resource",
 );
 console.log(response);
@@ -217,7 +232,7 @@ console.log("Headers:", response.headers);
 ```typeScript
 const result = await simple("https://api.example.com/resource")
   .body({ name: "example", location: "example" })
-  .post<ExpectedReturnType>();
+  .post<ExpectedReturnType>(); // no need to set "Content-Type" if there is a body, it will automatically be set to "application/json"
 
 return result.data;
 ```
@@ -275,7 +290,7 @@ export const tsFetch = async <T>(
   try {
     const response = await fetch(url, {
       method: "GET",
-      headers: { ...requestHeaders },
+      headers: requestHeaders,
     });
 
     if (!response.ok) {
