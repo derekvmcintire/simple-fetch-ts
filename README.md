@@ -77,7 +77,7 @@ data directly. It uses the same fetch helper as the factory function, handling e
 import { simpleTsFetch } from "simple-fetch-ts";
 
 const response = await simpleTsFetch<ExpectedReturnType[]>(
-  "https://api.example.com/resource"
+  "https://api.example.com/resource",
 );
 console.log(response);
 ```
@@ -244,7 +244,7 @@ try {
   return parsedResponse;
 } catch (error: unknown) {
   throw new Error(
-    error instanceof Error ? error.message : "An unknown error occurred"
+    error instanceof Error ? error.message : "An unknown error occurred",
   );
 }
 ```
@@ -270,7 +270,7 @@ Both `simpleTsFetch()` and `simple.fetch()` use `tsFetch()`:
  */
 export const tsFetch = async <T>(
   url: string,
-  requestHeaders: HeadersInit = {}
+  requestHeaders: HeadersInit = {},
 ): Promise<SimpleResponse<T>> => {
   try {
     const response = await fetch(url, {
@@ -280,7 +280,7 @@ export const tsFetch = async <T>(
 
     if (!response.ok) {
       throw new Error(
-        `Network response status ${response.status} with URL: ${url}`
+        `Network response status ${response.status} with URL: ${url}`,
       );
     }
 
@@ -292,7 +292,7 @@ export const tsFetch = async <T>(
     };
   } catch (error: unknown) {
     throw new Error(
-      error instanceof Error ? error.message : "An unknown error occurred"
+      error instanceof Error ? error.message : "An unknown error occurred",
     );
   }
 };

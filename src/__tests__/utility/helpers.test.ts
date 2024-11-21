@@ -1,7 +1,7 @@
+import { QueryParams } from "../../types";
 import {
   validateQueryParams,
   serializeQueryParams,
-  QueryParams,
   isValidURL,
 } from "../../utility/helpers";
 
