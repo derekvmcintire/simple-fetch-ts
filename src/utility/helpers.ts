@@ -1,4 +1,4 @@
-export type QueryParams = Record<string, string | number | (string | number)[]>;
+import { QueryParams } from "..";
 
 export const validateQueryParams = (params: unknown): void => {
   if (typeof params !== "object" || params === null || Array.isArray(params)) {

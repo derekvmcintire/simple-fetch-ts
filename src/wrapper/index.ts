@@ -3,8 +3,8 @@ import { tsFetch } from "../fetch";
 import { tsPatch } from "../patch";
 import { tsPost } from "../post";
 import { tsPut } from "../put";
-import { QueryParams, serializeQueryParams } from "../utility/helpers";
-import { SimpleResponse } from "../types";
+import { serializeQueryParams } from "../utility/helpers";
+import { QueryParams, SimpleResponse } from "../types";
 
 /**
  * FetchWrapper
