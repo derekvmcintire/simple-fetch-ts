@@ -38,7 +38,7 @@ import { simple } from "simple-fetch-ts";
 
 ### Quick Start
 
-1. **Creating a Fetch Wrapper Instance**
+1. **Creating a SimpleBuilder Instance**
 
    Use the `simple` factory function to validate the URL and instantiate a `SimpleBuilder`.
 
@@ -56,7 +56,7 @@ import { simple } from "simple-fetch-ts";
    const myFilters = { page: 1, limit: 10, orderBy: "id" };
    const params = myFilters as QueryParams;
    const convertToLowerCase = true;
-   const wrapper = api
+   const request = api
      .headers({ Authorization: "Bearer token" })
      .params(params, convertToLowerCase) // v1.0.5 - added optional flag to convert queryParams to lowercase
      .body<BodyType>({ name: "example" }); // v1.0.5 - added generic Typing to .body()
@@ -67,7 +67,7 @@ import { simple } from "simple-fetch-ts";
    Choose an HTTP method to execute the request:
 
    ```typescript
-   const response = await wrapper.post<ExpectedReturnType>();
+   const response = await request.post<ExpectedReturnType>();
    const myData = response.data;
    console.log(myData);
    ```
@@ -209,36 +209,14 @@ interface SimpleResponse<T> {
 
 ## Examples
 
-### Step By Step
-
-```typescript
-import { simple } from "simple-fetch-ts";
-
-// Create a wrapper instance
-const api = simple("https://api.example.com/resource");
-
-// Configure the request
-const wrapper = api
-  .headers({ Authorization: "Bearer token" })
-  .params({ page: 1, limit: 10 })
-  .body({ name: "example" });
-
-// Send a POST request
-const response = await wrapper.post<{ id: string; name: string }>();
+```typeScript
+const response = await simple("https://api.example.com/resource")
+  .body({ name: "example", location: "example" })
+  .post<ExpectedReturnType>(); // no need to set { "Content-Type": "application/json" } if there is a body, it will automatically be set
 
 console.log("Data:", response.data);
 console.log("Status:", response.status);
 console.log("Headers:", response.headers);
-```
-
-### Simple Post
-
-```typeScript
-const result = await simple("https://api.example.com/resource")
-  .body({ name: "example", location: "example" })
-  .post<ExpectedReturnType>(); // no need to set "Content-Type" if there is a body, it will automatically be set to "application/json"
-
-return result.data;
 ```
 
 ### Equivelant Code Using Native Fetch
@@ -272,7 +250,25 @@ try {
 
 ## Error Handling
 
-The library ensures consistent error messages for invalid configurations or failed requests. Errors are thrown as `Error` objects with detailed messages.
+The library ensures consistent error messages for invalid configurations or failed requests. Errors are thrown as `Error` objects with detailed messages. More robust
+error handling is currently in development
+
+```typescript
+ if (!response.ok) {
+      throw new Error(
+        `Network response status ${response.status} with URL: ${url}`,
+      );
+    }
+```
+
+```typescript
+catch (error: unknown) {
+    // Rethrow an error with additional context if necessary
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    );
+  }
+```
 
 ---
 
