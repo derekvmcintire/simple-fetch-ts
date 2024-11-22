@@ -55,6 +55,7 @@ export const tsPatch = async <T>(
       data,
       status: response.status,
       headers: response.headers,
+      raw: response,
     };
   } catch (error: unknown) {
     if (error instanceof SimpleFetchRequestError) {
