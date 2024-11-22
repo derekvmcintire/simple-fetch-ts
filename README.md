@@ -24,11 +24,10 @@ npm install simple-fetch-ts
 ## Key Features
 
 - **Fluent Builder API**: _Chainable methods for setting headers, query parameters, and body data._
-- **Type-Safe Responses**: _Strongly typed responses ensure compile-time safety._
+- **Type-Safety**: _Improve type safety by specifying the type of the request body or response directly via generics._
 - **Simplified Query Parameter Handling**: _Automatic serialization of query parameters._
 - **Centralized Error Handling**: _Consistent error messages for all HTTP methods._
 - **Query Parameter Case Normalization**: _Optionally convert query parameter keys to lowercase._
-- **Generic Typing**: _Improve type safety by specifying the type of the request body or response directly via generic typing._
 - **Lightweight**: _Built with native `fetch` under the hood._
 
 ---
@@ -73,7 +72,7 @@ import { simple } from "simple-fetch-ts";
    Choose an HTTP method to execute the request:
 
    ```typescript
-   const response = await request.post<ExpectedReturnType>();
+   const response = await request.post<ExpectedReturnType>(); // generic type defaults to <unknown> if type is not passed by the user
    const myData = response.data;
    console.log(myData);
    ```
