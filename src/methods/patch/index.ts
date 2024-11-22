@@ -1,4 +1,4 @@
-import { SimpleFetchRequestError } from "../../errors";
+import { SimpleFetchRequestError } from "../../errors/request-error";
 import { SimpleResponse } from "../../types";
 import { getContentType } from "../../utility/get-content-type";
 
@@ -38,13 +38,15 @@ export const tsPatch = async <T>(
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const errorText = await response
+        .text()
+        .catch(() => "Unable to parse response text");
       throw new SimpleFetchRequestError(
         "PATCH",
         url,
         response.status,
         response.statusText,
-        errorText
+        errorText,
       );
     }
 
@@ -59,7 +61,7 @@ export const tsPatch = async <T>(
       throw error; // Rethrow for consistent handling upstream
     }
     throw new Error(
-      error instanceof Error ? error.message : "An unknown error occurred"
+      error instanceof Error ? error.message : "An unknown error occurred",
     );
   }
 };

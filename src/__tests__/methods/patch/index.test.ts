@@ -55,7 +55,7 @@ describe("tsPatch", () => {
     const requestHeaders = {};
 
     await expect(tsPatch(url, requestBody, requestHeaders)).rejects.toThrow(
-      "Network response status 400 with URL: https://example.com/patch",
+      "PATCH request to https://example.com/patch failed with status 400: No status text",
     );
   });
 

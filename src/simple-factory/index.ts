@@ -1,5 +1,5 @@
 import { SimpleBuilder } from "../builder";
-import { InvalidURLError } from "../errors";
+import { InvalidURLError } from "../errors/url-validation-error";
 import { isValidURL } from "../utility/url-helpers";
 
 // Factory function

@@ -1,4 +1,4 @@
-import { SimpleFetchRequestError } from "../../errors";
+import { SimpleFetchRequestError } from "../../errors/request-error";
 import { SimpleResponse } from "../../types";
 import { getContentType } from "../../utility/get-content-type";
 
@@ -17,7 +17,6 @@ export const tsPut = async <T>(
   requestBody: any,
   requestHeaders: HeadersInit = {},
 ): Promise<SimpleResponse<T>> => {
-  // Get Content-Type header and ensure it's lowercase
   const contentType = getContentType(requestHeaders).toLowerCase();
 
   // Automatically stringify the body if Content-Type is JSON and body is an object
@@ -36,13 +35,15 @@ export const tsPut = async <T>(
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const errorText = await response
+        .text()
+        .catch(() => "Unable to parse response text");
       throw new SimpleFetchRequestError(
         "PUT",
         url,
         response.status,
         response.statusText,
-        errorText
+        errorText,
       );
     }
 
@@ -57,7 +58,7 @@ export const tsPut = async <T>(
       throw error; // Rethrow for consistent handling upstream
     }
     throw new Error(
-      error instanceof Error ? error.message : "An unknown error occurred"
+      error instanceof Error ? error.message : "An unknown error occurred",
     );
   }
 };

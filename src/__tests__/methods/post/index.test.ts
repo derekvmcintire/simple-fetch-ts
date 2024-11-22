@@ -57,7 +57,7 @@ describe("tsPost", () => {
     const requestHeaders = {};
 
     await expect(tsPost(url, requestBody, requestHeaders)).rejects.toThrow(
-      "Network response status 400 with URL: https://example.com/post",
+      "POST request to https://example.com/post failed with status 400: No status text",
     );
   });
 
