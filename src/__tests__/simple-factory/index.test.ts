@@ -14,11 +14,11 @@ describe("simple factory function", () => {
     // Mock isValidURL to return true for valid URL
     (isValidURL as jest.Mock).mockReturnValue(true);
 
-    const wrapper = simple(validUrl);
+    const request = simple(validUrl);
 
     // Ensure a SimpleBuilder instance is returned
-    expect(wrapper).toBeInstanceOf(SimpleBuilder);
-    expect(wrapper["url"]).toBe(validUrl); // Ensure the correct URL is passed
+    expect(request).toBeInstanceOf(SimpleBuilder);
+    expect(request["url"]).toBe(validUrl); // Ensure the correct URL is passed
   });
 
   it("should throw an error for an invalid URL", () => {

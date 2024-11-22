@@ -1,3 +1,4 @@
+import { SimpleFetchRequestError } from "../../errors/request-error";
 import { SimpleResponse } from "../../types";
 import { getContentType } from "../../utility/get-content-type";
 
@@ -37,8 +38,15 @@ export const tsPost = async <T>(
     });
 
     if (!response.ok) {
-      throw new Error(
-        `Network response status ${response.status} with URL: ${url}`,
+      const errorText = await response
+        .text()
+        .catch(() => "Unable to parse response text");
+      throw new SimpleFetchRequestError(
+        "POST",
+        url,
+        response.status,
+        response.statusText,
+        errorText,
       );
     }
 
@@ -51,7 +59,9 @@ export const tsPost = async <T>(
       headers: response.headers,
     };
   } catch (error: unknown) {
-    // Rethrow an error with additional context if necessary
+    if (error instanceof SimpleFetchRequestError) {
+      throw error; // Rethrow for consistent handling upstream
+    }
     throw new Error(
       error instanceof Error ? error.message : "An unknown error occurred",
     );

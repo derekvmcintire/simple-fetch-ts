@@ -3,7 +3,7 @@ import { tsFetch } from "../../../methods/fetch";
 // Mock the fetch API
 global.fetch = jest.fn();
 
-describe("typedFetch", () => {
+describe("tsFetch", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -33,15 +33,15 @@ describe("typedFetch", () => {
   });
 
   it("should throw an error for non-200 responses", async () => {
-    const mockResponse = {
-      ok: false,
+    const mockResponse = new Response("Not Found", {
       status: 404,
-    };
+      statusText: "Not Found",
+    });
 
-    (fetch as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (global.fetch as jest.Mock).mockResolvedValueOnce(mockResponse);
 
     await expect(tsFetch("/test-url")).rejects.toThrow(
-      "Network response status 404 with URL: /test-url",
+      "GET request to /test-url failed with status 404: Not Found",
     );
   });
 
