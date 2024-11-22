@@ -10,10 +10,8 @@ import { tsFetch } from "../methods/fetch";
 export const simpleFetch = async <T>(
   url: string,
   requestHeaders: HeadersInit = {},
-): Promise<T> => {
-  const result = await tsFetch<T>(url, requestHeaders);
-  if (!result?.data) {
-    throw new Error(`No data returned from the fetch for URL: ${url}`);
-  }
-  return result.data;
+): Promise<T | null> => {
+  const response = await tsFetch<T>(url, requestHeaders);
+
+  return response?.data ?? null;
 };

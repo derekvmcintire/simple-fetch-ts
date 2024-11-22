@@ -29,12 +29,12 @@ describe("simpleTsFetch", () => {
     await expect(simpleFetch("/test-url")).rejects.toThrow(errorMessage);
   });
 
-  it("should throw an error when typedFetch returns an unexpected result", async () => {
+  it("should return null when typedFetch returns an unexpected result", async () => {
     (tsFetch as jest.Mock).mockResolvedValueOnce({ data: undefined });
 
-    // We expect an error to be thrown since the fetch response contains no data
-    await expect(simpleFetch("/test-url")).rejects.toThrow(
-      "No data returned from the fetch for URL: /test-url",
-    );
+    const data = await simpleFetch("/test-url");
+
+    // We expect null since the fetch response contains no data
+    expect(data).toBe(null);
   });
 });

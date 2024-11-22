@@ -1,4 +1,8 @@
 import { QueryParams } from "..";
+import {
+  InvalidQueryParamError,
+  InvalidQueryParamObjectError,
+} from "../errors/query-param-error";
 
 /**
  * Validates the query parameters to ensure they are a plain object and that each parameter
@@ -10,7 +14,7 @@ import { QueryParams } from "..";
  */
 export const validateQueryParams = (params: unknown): void => {
   if (typeof params !== "object" || params === null || Array.isArray(params)) {
-    throw new Error("Query parameters must be a plain object.");
+    throw new InvalidQueryParamObjectError(params);
   }
 
   for (const [key, value] of Object.entries(params)) {
@@ -24,9 +28,7 @@ export const validateQueryParams = (params: unknown): void => {
         )
       )
     ) {
-      throw new Error(
-        `Invalid query parameter value for key "${key}": Only strings, numbers, or arrays of these are allowed.`,
-      );
+      throw new InvalidQueryParamError(key, value);
     }
   }
 };
@@ -53,9 +55,7 @@ export const serializeQueryParams = (
 
       // Check if the value is valid (not null or undefined)
       if (value === null || value === undefined) {
-        throw new Error(
-          `Invalid query parameter value for key "${finalKey}": null or undefined is not allowed.`,
-        );
+        throw new InvalidQueryParamError(key, value);
       }
 
       // Handle array values as repeated key-value pairs

@@ -92,16 +92,27 @@ import { simple } from "simple-fetch-ts";
 ## simpleFetch
 
 If you want an inflexible, but quick way to make a simple fetch request, you can use simpleFetch. simpleFetch skips the response object and returns your parsed
-data directly. It uses the same fetch helper as the factory function, handling errors internally.
+data directly. It uses the same fetch helper as the factory function, handling errors internally. If a `null` or `undefined` value is returned, simpleFetch will coalesce
+the response to be `null`, even if a non-nullable response type has been defined by the user.
 
 ```typescript
 import { simpleFetch } from "simple-fetch-ts";
 
-// data is parsed and ready to consume, but there is no access to the response object
+/**
+ * Fetches data from the given URL and returns the data part of the response.
+ * @param url - The URL to fetch data from.
+ * @param requestHeaders - Optional headers to be sent with the request.
+ * @returns { T | null} - The data returned from the fetch.
+ * @throws Will throw an error if the fetch fails or the response is not OK.
+ */
 const response = await simpleFetch<ExpectedReturnType[]>(
   "https://api.example.com/resource",
 );
-console.log(response);
+if (data === null) {
+  console.log("No data found, handling gracefully.");
+} else {
+  console.log("Received data:", data);
+}
 ```
 
 ---
