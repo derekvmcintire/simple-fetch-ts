@@ -1,15 +1,15 @@
-import { tsPatch } from "../../patch";
-import { SimpleResponse } from "../../types";
+import { tsPut } from "../../../methods/put";
+import { SimpleResponse } from "../../../types";
 
 // Mocking the global fetch function
 global.fetch = jest.fn();
 
-describe("tsPatch", () => {
+describe("tsPut", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should successfully make a PATCH request and return the expected data", async () => {
+  it("should successfully make a PUT request and return the expected data", async () => {
     // Mock response data and headers
     const mockData = { success: true };
     const mockHeaders = new Headers();
@@ -21,11 +21,11 @@ describe("tsPatch", () => {
 
     (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-    const url = "https://example.com/patch";
+    const url = "https://example.com/put";
     const requestBody = { name: "John Doe" };
     const requestHeaders = { Authorization: "Bearer token" };
 
-    const result: SimpleResponse<typeof mockData> = await tsPatch(
+    const result: SimpleResponse<typeof mockData> = await tsPut(
       url,
       requestBody,
       requestHeaders,
@@ -33,16 +33,18 @@ describe("tsPatch", () => {
 
     // Check that the correct fetch call was made
     expect(fetch).toHaveBeenCalledWith(url, {
-      method: "PATCH",
+      method: "PUT",
       body: requestBody,
       headers: {
         Authorization: "Bearer token",
       },
     });
 
+    // Check the result
     expect(result.data).toEqual(mockData);
     expect(result.status).toBe(200);
-    expect(result.headers).toBeInstanceOf(Headers); // Check if the headers is an instance of Headers
+    expect(result.headers.has("Authorization")).toBe(true);
+    expect(result.headers.get("Authorization")).toBe("Bearer token");
   });
 
   it("should throw an error when the response status is not OK (e.g., 400)", async () => {
@@ -50,12 +52,12 @@ describe("tsPatch", () => {
     const mockResponse = new Response(null, { status: 400 });
     (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-    const url = "https://example.com/patch";
+    const url = "https://example.com/put";
     const requestBody = { name: "John Doe" };
     const requestHeaders = {};
 
-    await expect(tsPatch(url, requestBody, requestHeaders)).rejects.toThrow(
-      "Network response status 400 with URL: https://example.com/patch",
+    await expect(tsPut(url, requestBody, requestHeaders)).rejects.toThrow(
+      "PUT request to https://example.com/put failed with status 400: No status text",
     );
   });
 
@@ -64,11 +66,11 @@ describe("tsPatch", () => {
     const errorMessage = "Network failure";
     (global.fetch as jest.Mock).mockRejectedValue(new Error(errorMessage));
 
-    const url = "https://example.com/patch";
+    const url = "https://example.com/put";
     const requestBody = { name: "John Doe" };
     const requestHeaders = {};
 
-    await expect(tsPatch(url, requestBody, requestHeaders)).rejects.toThrow(
+    await expect(tsPut(url, requestBody, requestHeaders)).rejects.toThrow(
       errorMessage,
     );
   });
@@ -77,11 +79,11 @@ describe("tsPatch", () => {
     // Simulate an unexpected error type
     (global.fetch as jest.Mock).mockRejectedValue("Non-error");
 
-    const url = "https://example.com/patch";
+    const url = "https://example.com/put";
     const requestBody = { name: "John Doe" };
     const requestHeaders = {};
 
-    await expect(tsPatch(url, requestBody, requestHeaders)).rejects.toThrow(
+    await expect(tsPut(url, requestBody, requestHeaders)).rejects.toThrow(
       "An unknown error occurred",
     );
   });

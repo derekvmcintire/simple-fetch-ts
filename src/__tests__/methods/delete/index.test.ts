@@ -1,4 +1,4 @@
-import { tsDelete } from "../../delete";
+import { tsDelete } from "../../../methods/delete";
 
 // Mocking the global fetch function
 global.fetch = jest.fn();
@@ -41,7 +41,7 @@ describe("tsDelete", () => {
     const headers = {};
 
     await expect(tsDelete(url, headers)).rejects.toThrow(
-      "Network response status 404 with URL: https://example.com/delete",
+      "DELETE request to https://example.com/delete failed with status 404: No status text",
     );
   });
 

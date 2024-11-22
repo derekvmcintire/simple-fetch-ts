@@ -1,6 +1,6 @@
 import { simple } from "../../simple-factory";
 import { isValidURL } from "../../utility/url-helpers";
-import { FetchWrapper } from "../../wrapper";
+import { SimpleBuilder } from "../../builder";
 
 // Mock the isValidURL function
 jest.mock("../../utility/url-helpers", () => ({
@@ -8,17 +8,17 @@ jest.mock("../../utility/url-helpers", () => ({
 }));
 
 describe("simple factory function", () => {
-  it("should return a new FetchWrapper instance for a valid URL", () => {
+  it("should return a new SimpleBuilder instance for a valid URL", () => {
     const validUrl = "https://api.example.com";
 
     // Mock isValidURL to return true for valid URL
     (isValidURL as jest.Mock).mockReturnValue(true);
 
-    const wrapper = simple(validUrl);
+    const request = simple(validUrl);
 
-    // Ensure a FetchWrapper instance is returned
-    expect(wrapper).toBeInstanceOf(FetchWrapper);
-    expect(wrapper["url"]).toBe(validUrl); // Ensure the correct URL is passed
+    // Ensure a SimpleBuilder instance is returned
+    expect(request).toBeInstanceOf(SimpleBuilder);
+    expect(request["url"]).toBe(validUrl); // Ensure the correct URL is passed
   });
 
   it("should throw an error for an invalid URL", () => {
@@ -28,7 +28,7 @@ describe("simple factory function", () => {
     (isValidURL as jest.Mock).mockReturnValue(false);
 
     // Expect an error to be thrown with the correct message
-    expect(() => simple(invalidUrl)).toThrowError(
+    expect(() => simple(invalidUrl)).toThrow(
       `A valid URL is required, received: ${invalidUrl}`,
     );
   });
