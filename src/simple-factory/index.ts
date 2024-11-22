@@ -1,4 +1,4 @@
-import { FetchWrapper } from "../wrapper";
+import { SimpleBuilder } from "../builder";
 import { isValidURL } from "../utility/url-helpers";
 
 // Factory function
@@ -7,5 +7,5 @@ export const simple = (url: string) => {
     throw new Error(`A valid URL is required, received: ${url}`);
   }
 
-  return new FetchWrapper(url);
+  return new SimpleBuilder(url);
 };

@@ -1,10 +1,10 @@
-import { FetchWrapper } from "../../wrapper";
-import { tsFetch } from "../../fetch";
-import { tsPost } from "../../post";
-import { tsPut } from "../../put";
-import { tsPatch } from "../../patch";
-import { tsDelete } from "../../delete";
+import { SimpleBuilder } from "../../builder";
 import { serializeQueryParams } from "../../utility/url-helpers";
+import { tsDelete } from "../../methods/delete";
+import { tsFetch } from "../../methods/fetch";
+import { tsPatch } from "../../methods/patch";
+import { tsPost } from "../../methods/post";
+import { tsPut } from "../../methods/put";
 
 const mockResponse = {
   data: { message: "response" }, // Mocked data
@@ -65,63 +65,63 @@ type MockBody = {
   name: string;
 };
 
-describe("FetchWrapper", () => {
-  let fetchWrapper: FetchWrapper;
+describe("SimpleBuilder", () => {
+  let simpleBuilder: SimpleBuilder;
   const mockUrl = "https://api.example.com/resource";
   const mockHeaders = { Authorization: "Bearer token" };
   const mockParams = { page: 1, limit: 10 };
   const mockBody = { name: "example" };
 
   beforeEach(() => {
-    fetchWrapper = new FetchWrapper(mockUrl);
+    simpleBuilder = new SimpleBuilder(mockUrl);
   });
 
   it("should initialize with a URL and optional headers", () => {
-    expect(fetchWrapper).toBeInstanceOf(FetchWrapper);
-    expect(fetchWrapper["url"]).toBe(mockUrl);
-    expect(fetchWrapper["requestHeaders"]).toEqual({});
+    expect(simpleBuilder).toBeInstanceOf(SimpleBuilder);
+    expect(simpleBuilder["url"]).toBe(mockUrl);
+    expect(simpleBuilder["requestHeaders"]).toEqual({});
   });
 
   it("should allow method chaining with body, headers, and params", () => {
-    fetchWrapper
+    simpleBuilder
       .body<MockBody>(mockBody)
       .headers(mockHeaders)
       .params(mockParams);
-    expect(fetchWrapper["requestBody"]).toBe(mockBody);
-    expect(fetchWrapper["requestHeaders"]).toEqual(mockHeaders);
-    expect(fetchWrapper["requestParams"]).toBe(
+    expect(simpleBuilder["requestBody"]).toBe(mockBody);
+    expect(simpleBuilder["requestHeaders"]).toEqual(mockHeaders);
+    expect(simpleBuilder["requestParams"]).toBe(
       serializeQueryParams(mockParams),
     );
   });
 
   it("should build the correct URL with query parameters", () => {
-    fetchWrapper.params(mockParams);
-    const builtUrl = fetchWrapper["buildUrl"]();
+    simpleBuilder.params(mockParams);
+    const builtUrl = simpleBuilder["buildUrl"]();
     expect(builtUrl).toBe(`${mockUrl}?page=1&limit=10`);
   });
 
   describe("handleRequest", () => {
     it("should throw an error for methods that should not have a body", async () => {
-      fetchWrapper.body<MockBody>(mockBody);
-      await expect(fetchWrapper.fetch()).rejects.toThrow(
+      simpleBuilder.body<MockBody>(mockBody);
+      await expect(simpleBuilder.fetch()).rejects.toThrow(
         "GET requests should not have a body.",
       );
     });
 
     it("should add Content-Type header if not present and body is provided", async () => {
-      fetchWrapper.body<MockBody>(mockBody);
-      fetchWrapper.headers(new Headers()); // Use new Headers() instead of {}
-      await fetchWrapper.post();
+      simpleBuilder.body<MockBody>(mockBody);
+      simpleBuilder.headers(new Headers()); // Use new Headers() instead of {}
+      await simpleBuilder.post();
       expect(
-        (fetchWrapper["requestHeaders"] as Record<string, string>)[
+        (simpleBuilder["requestHeaders"] as Record<string, string>)[
           "Content-Type"
         ],
       ).toBe("application/json");
     });
 
     it("should call the correct request function for POST", async () => {
-      fetchWrapper.body<MockBody>(mockBody).headers(mockHeaders);
-      const response = await fetchWrapper
+      simpleBuilder.body<MockBody>(mockBody).headers(mockHeaders);
+      const response = await simpleBuilder
         .body<MockBody>(mockBody)
         .headers(mockHeaders)
         .post();
@@ -134,7 +134,7 @@ describe("FetchWrapper", () => {
     });
 
     it("should call the correct request function for GET", async () => {
-      const response = await fetchWrapper.params(mockParams).fetch();
+      const response = await simpleBuilder.params(mockParams).fetch();
       expect(tsFetch).toHaveBeenCalledWith(`${mockUrl}?page=1&limit=10`, {});
       expect(response).toEqual(mockResponse);
     });
@@ -148,7 +148,7 @@ describe("FetchWrapper", () => {
         .spyOn(console, "error")
         .mockImplementation(() => {});
 
-      await expect(fetchWrapper.fetch()).rejects.toThrow(errorMessage);
+      await expect(simpleBuilder.fetch()).rejects.toThrow(errorMessage);
 
       // Ensure console.error was called
       expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -163,8 +163,8 @@ describe("FetchWrapper", () => {
 
   describe("HTTP methods", () => {
     it("should call tsPut for PUT requests", async () => {
-      fetchWrapper.body<MockBody>(mockBody).headers(mockHeaders);
-      const response = await fetchWrapper.put();
+      simpleBuilder.body<MockBody>(mockBody).headers(mockHeaders);
+      const response = await simpleBuilder.put();
       expect(tsPut).toHaveBeenCalledWith(
         `${mockUrl}`,
         mockBody, // Updated to reflect stringified body
@@ -174,8 +174,8 @@ describe("FetchWrapper", () => {
     });
 
     it("should call tsPatch for PATCH requests", async () => {
-      fetchWrapper.body<MockBody>(mockBody).headers(mockHeaders);
-      const response = await fetchWrapper.patch();
+      simpleBuilder.body<MockBody>(mockBody).headers(mockHeaders);
+      const response = await simpleBuilder.patch();
       expect(tsPatch).toHaveBeenCalledWith(
         `${mockUrl}`,
         mockBody, // Updated to reflect stringified body
@@ -185,8 +185,8 @@ describe("FetchWrapper", () => {
     });
 
     it("should call tsDelete for DELETE requests", async () => {
-      fetchWrapper.headers(mockHeaders);
-      const response = await fetchWrapper.delete();
+      simpleBuilder.headers(mockHeaders);
+      const response = await simpleBuilder.delete();
       expect(tsDelete).toHaveBeenCalledWith(`${mockUrl}`, mockHeaders);
       expect(response).toEqual(mockResponse);
     });

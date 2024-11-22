@@ -1,4 +1,4 @@
-import { tsFetch } from "../../fetch";
+import { tsFetch } from "../../../methods/fetch";
 
 // Mock the fetch API
 global.fetch = jest.fn();
