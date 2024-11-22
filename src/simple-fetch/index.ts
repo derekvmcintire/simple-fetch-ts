@@ -1,4 +1,4 @@
-import { tsFetch } from "../fetch";
+import { tsFetch } from "../methods/fetch";
 
 /**
  * Fetches data from the given URL and returns the data part of the response.

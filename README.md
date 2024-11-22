@@ -36,7 +36,7 @@ import { simple } from "simple-fetch-ts";
 
 1. **Creating a Fetch Wrapper Instance**
 
-   Use the `simple` factory function to validate the URL and instantiate a `FetchWrapper`.
+   Use the `simple` factory function to validate the URL and instantiate a `SimpleBuilder`.
 
    ```typescript
    import { QueryParams, simple } from "simple-fetch-ts";
@@ -49,7 +49,7 @@ import { simple } from "simple-fetch-ts";
    Chain methods to configure headers, query parameters, and request body:
 
    ```typescript
-   const myFilters = { page: 1, limit: 10, orderBy: 'id' };
+   const myFilters = { page: 1, limit: 10, orderBy: "id" };
    const params = myFilters as QueryParams;
    const convertToLowerCase = true;
    const wrapper = api
@@ -72,12 +72,12 @@ import { simple } from "simple-fetch-ts";
 
    ```typescript
    const response = await simple("https://api.example.com/resource")
-      .headers({ Authorization: "Bearer token" })
-      .params(params, convertToLowerCase)
-      .body<BodyType>({ name: "example" })
-      .post<ExpectedReturnType>();
+     .headers({ Authorization: "Bearer token" })
+     .params(params, convertToLowerCase)
+     .body<BodyType>({ name: "example" })
+     .post<ExpectedReturnType>();
 
-   console.log(response.data)
+   console.log(response.data);
    ```
 
 ---
@@ -101,17 +101,17 @@ console.log(response);
 
 ## API Reference
 
-### `simple(url: string): FetchWrapper`
+### `simple(url: string): SimpleBuilder`
 
-- **Description**: Factory function that creates a `FetchWrapper` instance.
+- **Description**: Factory function that creates a `SimpleBuilder` instance.
 - **Parameters**:
   - `url` (`string`): The base URL for the API.
 - **Throws**: Error if the provided URL is invalid.
-- **Returns**: A `FetchWrapper` instance.
+- **Returns**: A `SimpleBuilder` instance.
 
 ---
 
-### Class: `FetchWrapper`
+### Class: `SimpleBuilder`
 
 The core class for building and executing HTTP requests.
 
@@ -165,7 +165,7 @@ constructor(url: string, defaultHeaders?: HeadersInit)
 
 ## Utility Functions
 
-The library includes helper functions for low-level HTTP requests. These are internally used by `FetchWrapper`.
+The library includes helper functions for low-level HTTP requests. These are internally used by `SimpleBuilder`.
 
 ### `tsFetch<T>(url: string): Promise<SimpleResponse<T>>`
 
