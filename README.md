@@ -332,9 +332,15 @@ try {
 Both `simpleFetch()` and `simple.fetch()` use `tsFetch()`:
 
 ```typescript
+import { SimpleFetchRequestError } from "../../errors/request-error";
+import { SimpleResponse } from "../../types";
+
 /**
  * Performs a typed fetch request to the specified URL.
+ *
+ * @template T - The type of the expected response data.
  * @param url - The URL to fetch data from.
+ * @param requestHeaders - Optional headers to be sent with the request.
  * @returns A promise that resolves with the fetched data, status, and headers.
  * @throws Will throw an error if the fetch fails or the response is not OK.
  */
@@ -349,8 +355,15 @@ export const tsFetch = async <T>(
     });
 
     if (!response.ok) {
-      throw new Error(
-        `Network response status ${response.status} with URL: ${url}`,
+      const errorText = await response
+        .text()
+        .catch(() => "Unable to parse response text");
+      throw new SimpleFetchRequestError(
+        "GET",
+        url,
+        response.status,
+        response.statusText,
+        errorText,
       );
     }
 
@@ -361,6 +374,9 @@ export const tsFetch = async <T>(
       headers: response.headers,
     };
   } catch (error: unknown) {
+    if (error instanceof SimpleFetchRequestError) {
+      throw error; // Rethrow for consistent handling upstream
+    }
     throw new Error(
       error instanceof Error ? error.message : "An unknown error occurred",
     );
