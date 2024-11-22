@@ -1,3 +1,4 @@
+import { InvalidMethodBodyError } from "../errors/request-body-error";
 import { tsDelete } from "../methods/delete";
 import { tsFetch } from "../methods/fetch";
 import { tsPatch } from "../methods/patch";
@@ -107,7 +108,7 @@ export class SimpleBuilder {
       !["POST", "PUT", "PATCH", "DELETE"].includes(method) &&
       this.requestBody !== null
     ) {
-      throw new Error(`${method} requests should not have a body.`);
+      throw new InvalidMethodBodyError(method, this.url);
     }
 
     this.prepareHeaders();

@@ -8,26 +8,26 @@ import {
 describe("validateQueryParams", () => {
   it("should throw an error if params is not a plain object", () => {
     expect(() => validateQueryParams([])).toThrow(
-      "Query parameters must be a plain object.",
+      'Invalid argument pased to validateQueryParams: "". Only plain objects allowed.',
     );
     expect(() => validateQueryParams(null)).toThrow(
-      "Query parameters must be a plain object.",
+      'Invalid argument pased to validateQueryParams: "null". Only plain objects allowed.',
     );
     expect(() => validateQueryParams(123)).toThrow(
-      "Query parameters must be a plain object.",
+      'Invalid argument pased to validateQueryParams: "123". Only plain objects allowed.',
     );
     expect(() => validateQueryParams("string")).toThrow(
-      "Query parameters must be a plain object.",
+      'Invalid argument pased to validateQueryParams: "string". Only plain objects allowed.',
     );
   });
 
   it("should throw an error if a value is not a string, number, or an array of them", () => {
     expect(() => validateQueryParams({ key: {} })).toThrow(
-      'Invalid query parameter value for key "key": Only strings, numbers, or arrays of these are allowed.',
+      'Invalid query parameter value for key "key": "[object Object]". Only strings, numbers, or arrays of these are allowed.',
     );
 
     expect(() => validateQueryParams({ key: [1, 2, true] })).toThrow(
-      'Invalid query parameter value for key "key": Only strings, numbers, or arrays of these are allowed.',
+      'Invalid query parameter value for key "key": "1,2,true". Only strings, numbers, or arrays of these are allowed.',
     );
   });
 

@@ -61,10 +61,10 @@ import { simple } from "simple-fetch-ts";
    const myFilters = { page: 1, limit: 10, orderBy: "id" };
    const params = myFilters as QueryParams; // QueryParams type validates params i.e. no nested objects
    const convertToLowerCase = true;
-   
+
    const request = api
      .headers({ Authorization: "Bearer token" })
-     .params(params, convertToLowerCase)  // Optional flag for lowercase query parameter keys
+     .params(params, convertToLowerCase) // Optional flag for lowercase query parameter keys
      .body<BodyType>({ name: "example" });
    ```
 
@@ -95,16 +95,27 @@ import { simple } from "simple-fetch-ts";
 ## simpleFetch
 
 If you want an inflexible, but quick way to make a simple fetch request, you can use simpleFetch. simpleFetch skips the response object and returns your parsed
-data directly. It uses the same fetch helper as the factory function, handling errors internally.
+data directly. It uses the same fetch helper as the factory function, handling errors internally. If a `null` or `undefined` value is returned, simpleFetch will
+return `null`, even if a non-nullable response type has been defined by the user.
 
 ```typescript
 import { simpleFetch } from "simple-fetch-ts";
 
-// data is parsed and ready to consume, but there is no access to the response object
+/**
+ * Fetches data from the given URL and returns the data part of the response.
+ * @param url - The URL to fetch data from.
+ * @param requestHeaders - Optional headers to be sent with the request.
+ * @returns { T | null} - The data returned from the fetch.
+ * @throws Will throw an error if the fetch fails or the response is not OK.
+ */
 const response = await simpleFetch<ExpectedReturnType[]>(
-  "https://api.example.com/resource",
+  "https://api.example.com/resource"
 );
-console.log(response);
+if (data === null) {
+  console.log("No data found, handling gracefully.");
+} else {
+  console.log("Received data:", data);
+}
 ```
 
 ---
@@ -249,7 +260,7 @@ try {
   return parsedResponse;
 } catch (error: unknown) {
   throw new Error(
-    error instanceof Error ? error.message : "An unknown error occurred",
+    error instanceof Error ? error.message : "An unknown error occurred"
   );
 }
 ```
@@ -267,7 +278,6 @@ const response = await simple(`https://api.example.com/users/${userId}`)
   .put<ExpectedReturnType>();
 
 console.log("Updated user:", response.data);
-
 ```
 
 ---
@@ -298,12 +308,12 @@ export class SimpleFetchRequestError extends Error {
     public url: string,
     public status?: number,
     public statusText?: string,
-    public responseBody?: any,
+    public responseBody?: any
   ) {
     super(
       `${method} request to ${url} failed with status ${status ?? "unknown"}: ${
         statusText ?? "No status text"
-      }`,
+      }`
     );
     this.name = "SimpleFetchRequestError";
   }
@@ -325,7 +335,7 @@ export class InvalidURLError extends Error {
    */
   constructor(url: string) {
     super(
-      `A valid URL is required, received: ${url}. Ensure the URL starts with "http://" or "https://".`,
+      `A valid URL is required, received: ${url}. Ensure the URL starts with "http://" or "https://".`
     );
     this.name = "InvalidURLError";
   }
@@ -367,7 +377,7 @@ import { SimpleResponse } from "../../types";
  */
 export const tsFetch = async <T>(
   url: string,
-  requestHeaders: HeadersInit = {},
+  requestHeaders: HeadersInit = {}
 ): Promise<SimpleResponse<T>> => {
   try {
     const response = await fetch(url, {
@@ -384,7 +394,7 @@ export const tsFetch = async <T>(
         url,
         response.status,
         response.statusText,
-        errorText,
+        errorText
       );
     }
 
@@ -399,7 +409,7 @@ export const tsFetch = async <T>(
       throw error; // Rethrow for consistent handling upstream
     }
     throw new Error(
-      error instanceof Error ? error.message : "An unknown error occurred",
+      error instanceof Error ? error.message : "An unknown error occurred"
     );
   }
 };
