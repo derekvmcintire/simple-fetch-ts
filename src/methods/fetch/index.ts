@@ -1,7 +1,9 @@
-import { SimpleResponse } from "../types";
+import { SimpleResponse } from "../../types";
 
 /**
  * Performs a typed fetch request to the specified URL.
+ * 
+ * @template T - The type of the expected response data.
  * @param url - The URL to fetch data from.
  * @param requestHeaders - Optional headers to be sent with the request.
  * @returns A promise that resolves with the fetched data, status, and headers.

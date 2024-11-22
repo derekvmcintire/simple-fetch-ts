@@ -29,6 +29,7 @@ export class SimpleBuilder {
 
   /**
    * Sets the request body for the HTTP request.
+  * @template T - The type of the body.
    * @param body - The request payload.
    * @returns The current SimpleBuilder instance for method chaining.
    */
@@ -119,6 +120,7 @@ export class SimpleBuilder {
 
   /**
    * Executes a GET request.
+   * @template T - The type of the expected response data.
    * @returns A promise resolving to the response of the GET request.
    */
   async fetch<T>(): Promise<SimpleResponse<T>> {
@@ -131,6 +133,7 @@ export class SimpleBuilder {
 
   /**
    * Executes a POST request with the configured body and headers.
+   * @template T - The type of the expected response data.
    * @returns A promise resolving to the response of the POST request.
    */
   async post<T>(): Promise<SimpleResponse<T>> {
@@ -142,6 +145,7 @@ export class SimpleBuilder {
 
   /**
    * Executes a PUT request with the configured body and headers.
+   * @template T - The type of the expected response data.
    * @returns A promise resolving to the response of the PUT request.
    */
   async put<T>(): Promise<SimpleResponse<T>> {
@@ -153,6 +157,7 @@ export class SimpleBuilder {
 
   /**
    * Executes a PATCH request with the configured body and headers.
+   * @template T - The type of the expected response data.
    * @returns A promise resolving to the response of the PATCH request.
    */
   async patch<T>(): Promise<SimpleResponse<T>> {
@@ -164,6 +169,7 @@ export class SimpleBuilder {
 
   /**
    * Executes a DELETE request with the configured headers.
+   * @template T - The type of the expected response data.
    * @returns A promise resolving to the response of the DELETE request.
    */
   async delete<T>(): Promise<SimpleResponse<T>> {

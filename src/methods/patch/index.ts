@@ -1,8 +1,13 @@
-import { SimpleResponse } from "../types";
-import { getContentType } from "../utility/get-content-type";
+import { SimpleResponse } from "../../types";
+import { getContentType } from "../../utility/get-content-type";
 
 /**
  * Performs a typed PATCH request to the specified URL.
+ * 
+ * If the `Content-Type` is set to `application/json` and the body is an object, the body
+ * is automatically stringified to JSON format.
+ * 
+ * @template T - The type of the expected response data.
  * @param url - The URL to send the request to.
  * @param requestBody - The data to be sent as the request body.
  * @param requestHeaders - Optional headers to be sent with the request.
@@ -14,7 +19,6 @@ export const tsPatch = async <T>(
   requestBody: any,
   requestHeaders: HeadersInit = {},
 ): Promise<SimpleResponse<T>> => {
-  // Get Content-Type header and ensure it's lowercase
   const contentType = getContentType(requestHeaders).toLowerCase();
 
   // Automatically stringify the body if Content-Type is JSON and body is an object
