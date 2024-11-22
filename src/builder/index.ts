@@ -116,7 +116,7 @@ export class SimpleBuilder {
     try {
       return await requestFn();
     } catch (error) {
-      console.error(`Error with ${method} request to ${this.url}:`, error);
+      console.error(`Error with ${method} request to ${this.url}:`, error); // @TODO allow logger configuration
       throw error;
     }
   }
