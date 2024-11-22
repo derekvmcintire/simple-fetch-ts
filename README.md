@@ -437,24 +437,32 @@ As part of maintaining high-quality standards, **`simple-fetch-ts`** ensures rob
 
 #### Detailed File Coverage
 
-| File                    | % Stmts   | % Branch | % Funcs | % Lines   | Uncovered Line #s |
-| ----------------------- | --------- | -------- | ------- | --------- | ----------------- |
-| **All files**           | **98.61** | **81.6** | **100** | **98.49** |                   |
-| `builder/index.ts`      | 100       | 100      | 100     | 100       |                   |
-| `methods/delete`        | 100       | 75       | 100     | 100       | 14                |
-| `methods/fetch`         | 100       | 100      | 100     | 100       |                   |
-| `methods/patch`         | 100       | 55.55    | 100     | 100       | 20-26             |
-| `methods/post`          | 100       | 55.55    | 100     | 100       | 20-26             |
-| `methods/put`           | 100       | 55.55    | 100     | 100       | 17-24             |
-| `simple-factory`        | 100       | 100      | 100     | 100       |                   |
-| `simple-fetch`          | 100       | 83.33    | 100     | 100       | 15                |
-| `utility`               | 94.44     | 93.75    | 100     | 93.75     |                   |
-| └ `get-content-type.ts` | 90.9      | 100      | 100     | 90        | 26                |
-| └ `url-helpers.ts`      | 96        | 89.47    | 100     | 95.45     | 56                |
+## Test Coverage Report
+
+| **File**                 | **% Stmts** | **% Branch** | **% Funcs** | **% Lines** | **Uncovered Line #s** |
+|--------------------------|-------------|--------------|-------------|-------------|-----------------------|
+| **All files**             | 96.41%      | 83.16%       | 88.37%      | 96.19%      |                       |
+| **builder**               | 100%        | 100%         | 100%        | 100%        |                       |
+| **errors**                | 100%        | 83.33%       | 100%        | 100%        |                       |
+| - query-param-error.ts    | 100%        | 100%         | 100%        | 100%        |                       |
+| - request-body-error.ts   | 100%        | 100%         | 100%        | 100%        |                       |
+| - request-error.ts        | 100%        | 83.33%       | 100%        | 100%        | Line 26               |
+| - url-validation-error.ts | 100%        | 100%         | 100%        | 100%        |                       |
+| **methods/delete**        | 92.85%      | 80%          | 50%         | 92.3%       | Line 26               |
+| **methods/fetch**         | 92.85%      | 100%         | 50%         | 92.3%       | Line 26               |
+| **methods/patch**         | 94.11%      | 60%          | 50%         | 93.75%      | Line 43               |
+| **methods/post**          | 94.11%      | 60%          | 50%         | 93.75%      | Line 43               |
+| **methods/put**           | 94.11%      | 60%          | 50%         | 93.75%      | Line 40               |
+| **simple-factory**        | 100%        | 100%         | 100%        | 100%        |                       |
+| **simple-fetch**          | 100%        | 88.88%       | 100%        | 100%        | Line 16               |
+| **utility**               | 94.59%      | 93.75%       | 100%        | 93.93%      |                       |
+| - get-content-type.ts     | 90.9%       | 100%         | 100%        | 90%         | Line 26               |
+| - url-helpers.ts          | 96.15%      | 89.47%       | 100%        | 95.65%      | Line 58               |
+
 
 #### Observations
 
-- **High overall coverage**: As of version 1.0.5, the library demonstrates near-complete coverage for statements, functions, and lines.
+- **High overall coverage**: As of version 1.0.7, the library demonstrates near-complete coverage for statements, functions, and lines.
 - **Branch coverage**: Slightly lower branch coverage (81.6%) highlights opportunities for additional tests, particularly in conditional logic within methods like `patch`, `post`, and `put`.
 - **Uncovered lines**:
   - Conditional handling in `delete`, `patch`, `post`, and `put` methods.
