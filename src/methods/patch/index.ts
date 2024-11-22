@@ -1,3 +1,4 @@
+import { SimpleFetchRequestError } from "../../errors";
 import { SimpleResponse } from "../../types";
 import { getContentType } from "../../utility/get-content-type";
 
@@ -37,8 +38,13 @@ export const tsPatch = async <T>(
     });
 
     if (!response.ok) {
-      throw new Error(
-        `Network response status ${response.status} with URL: ${url}`,
+      const errorText = await response.text();
+      throw new SimpleFetchRequestError(
+        "PATCH",
+        url,
+        response.status,
+        response.statusText,
+        errorText
       );
     }
 
@@ -49,8 +55,11 @@ export const tsPatch = async <T>(
       headers: response.headers,
     };
   } catch (error: unknown) {
+    if (error instanceof SimpleFetchRequestError) {
+      throw error; // Rethrow for consistent handling upstream
+    }
     throw new Error(
-      error instanceof Error ? error.message : "An unknown error occurred",
+      error instanceof Error ? error.message : "An unknown error occurred"
     );
   }
 };
