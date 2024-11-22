@@ -14,10 +14,10 @@ Install the library via npm:
 npm install simple-fetch-ts
 ```
 
-#### Size (v1.0.6)
+#### Size (v1.0.7)
 
-- Package Size: 9.2 kB (compressed)
-- Unpacked Size: 33.9 kB (after installation)
+- Package Size: 9.9 kB (compressed)
+- Unpacked Size: 37.6 kB (after installation)
 
 ---
 
