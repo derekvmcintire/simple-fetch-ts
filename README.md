@@ -27,6 +27,8 @@ npm install simple-fetch-ts
 - **Type-Safe Responses**: Strongly typed responses ensure compile-time safety.
 - **Simplified Query Parameter Handling**: Automatic serialization of query parameters.
 - **Centralized Error Handling**: Consistent error messages for all HTTP methods.
+- Query Parameter Case Normalization: Optionally convert query parameter keys to lowercase.
+- Generic Typing for Request Body: Improve type safety by specifying the type of the request body directly with .body<BodyType>().
 - **Lightweight**: Built with native `fetch` under the hood.
 
 ---
@@ -57,12 +59,13 @@ import { simple } from "simple-fetch-ts";
 
    ```typescript
    const myFilters = { page: 1, limit: 10, orderBy: "id" };
-   const params = myFilters as QueryParams;
-   const convertToLowerCase = true;
-   const request = api
-     .headers({ Authorization: "Bearer token" })
-     .params(params, convertToLowerCase) // v1.0.5 - added optional flag to convert queryParams to lowercase
-     .body<BodyType>({ name: "example" }); // v1.0.5 - added generic Typing to .body()
+const params = myFilters as QueryParams;
+const convertToLowerCase = true;
+
+const request = api
+  .headers({ Authorization: "Bearer token" })
+  .params(params, convertToLowerCase)  // Optional flag for lowercase query parameter keys
+  .body<BodyType>({ name: "example" });
    ```
 
 3. **Sending the Request**
@@ -212,7 +215,7 @@ interface SimpleResponse<T> {
 
 ## Examples
 
-### SimpleFetch Post Request
+### Post Request
 
 ```typeScript
 const response = await simple("https://api.example.com/resource")
@@ -249,6 +252,22 @@ try {
     error instanceof Error ? error.message : "An unknown error occurred",
   );
 }
+```
+
+### More Examples
+
+```typescript
+const userId = 1;
+const requestBody = { name: "Updated Name" };
+
+const response = await simple(`https://api.example.com/users/${userId}`)
+  .headers({ Authorization: "Bearer token" })
+  .params({ include: "posts" })
+  .body(requestBody)
+  .put<ExpectedReturnType>();
+
+console.log("Updated user:", response.data);
+
 ```
 
 ---
