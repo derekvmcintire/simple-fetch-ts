@@ -99,7 +99,7 @@ import { simpleFetch } from "simple-fetch-ts";
 
 // data is parsed and ready to consume, but there is no access to the response object
 const response = await simpleFetch<ExpectedReturnType[]>(
-  "https://api.example.com/resource"
+  "https://api.example.com/resource",
 );
 console.log(response);
 ```
@@ -246,7 +246,7 @@ try {
   return parsedResponse;
 } catch (error: unknown) {
   throw new Error(
-    error instanceof Error ? error.message : "An unknown error occurred"
+    error instanceof Error ? error.message : "An unknown error occurred",
   );
 }
 ```
@@ -279,12 +279,12 @@ export class SimpleFetchRequestError extends Error {
     public url: string,
     public status?: number,
     public statusText?: string,
-    public responseBody?: any
+    public responseBody?: any,
   ) {
     super(
       `${method} request to ${url} failed with status ${status ?? "unknown"}: ${
         statusText ?? "No status text"
-      }`
+      }`,
     );
     this.name = "SimpleFetchRequestError";
   }
@@ -306,7 +306,7 @@ export class InvalidURLError extends Error {
    */
   constructor(url: string) {
     super(
-      `A valid URL is required, received: ${url}. Ensure the URL starts with "http://" or "https://".`
+      `A valid URL is required, received: ${url}. Ensure the URL starts with "http://" or "https://".`,
     );
     this.name = "InvalidURLError";
   }
@@ -348,7 +348,7 @@ import { SimpleResponse } from "../../types";
  */
 export const tsFetch = async <T>(
   url: string,
-  requestHeaders: HeadersInit = {}
+  requestHeaders: HeadersInit = {},
 ): Promise<SimpleResponse<T>> => {
   try {
     const response = await fetch(url, {
@@ -365,7 +365,7 @@ export const tsFetch = async <T>(
         url,
         response.status,
         response.statusText,
-        errorText
+        errorText,
       );
     }
 
@@ -380,7 +380,7 @@ export const tsFetch = async <T>(
       throw error; // Rethrow for consistent handling upstream
     }
     throw new Error(
-      error instanceof Error ? error.message : "An unknown error occurred"
+      error instanceof Error ? error.message : "An unknown error occurred",
     );
   }
 };
