@@ -29,7 +29,7 @@ export class SimpleBuilder {
 
   /**
    * Sets the request body for the HTTP request.
-  * @template T - The type of the body.
+   * @template T - The type of the body.
    * @param body - The request payload.
    * @returns The current SimpleBuilder instance for method chaining.
    */
@@ -72,7 +72,9 @@ export class SimpleBuilder {
    * @param headers - The headers object to validate.
    * @returns True if the headers object is a plain record, false otherwise.
    */
-  private isHeadersRecord(headers: HeadersInit): headers is Record<string, string> {
+  private isHeadersRecord(
+    headers: HeadersInit,
+  ): headers is Record<string, string> {
     return typeof headers === "object" && !(headers instanceof Headers);
   }
 

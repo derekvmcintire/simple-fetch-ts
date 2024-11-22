@@ -3,7 +3,7 @@ import { getContentType } from "../../utility/get-content-type";
 
 /**
  * Performs a typed PUT request to the specified URL.
- * 
+ *
  * @template T - The type of the expected response data.
  * @param url - The URL to send the request to.
  * @param requestBody - The data to be sent as the request body.
