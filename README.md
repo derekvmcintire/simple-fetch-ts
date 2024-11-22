@@ -23,11 +23,13 @@ npm install simple-fetch-ts
 
 ## Key Features
 
-- **Fluent Builder API**: Chainable methods for setting headers, query parameters, and body data.
-- **Type-Safe Responses**: Strongly typed responses ensure compile-time safety.
-- **Simplified Query Parameter Handling**: Automatic serialization of query parameters.
-- **Centralized Error Handling**: Consistent error messages for all HTTP methods.
-- **Lightweight**: Built with native `fetch` under the hood.
+- **Fluent Builder API**: _Chainable methods for setting headers, query parameters, and body data._
+- **Type-Safe Responses**: _Strongly typed responses ensure compile-time safety._
+- **Simplified Query Parameter Handling**: _Automatic serialization of query parameters._
+- **Centralized Error Handling**: _Consistent error messages for all HTTP methods._
+- **Query Parameter Case Normalization**: _Optionally convert query parameter keys to lowercase._
+- **Generic Typing**: _Improve type safety by specifying the type of the request body or response directly via generic typing._
+- **Lightweight**: _Built with native `fetch` under the hood._
 
 ---
 
@@ -57,12 +59,13 @@ import { simple } from "simple-fetch-ts";
 
    ```typescript
    const myFilters = { page: 1, limit: 10, orderBy: "id" };
-   const params = myFilters as QueryParams;
+   const params = myFilters as QueryParams; // QueryParams type validates params i.e. no nested objects
    const convertToLowerCase = true;
+   
    const request = api
      .headers({ Authorization: "Bearer token" })
-     .params(params, convertToLowerCase) // v1.0.5 - added optional flag to convert queryParams to lowercase
-     .body<BodyType>({ name: "example" }); // v1.0.5 - added generic Typing to .body()
+     .params(params, convertToLowerCase)  // Optional flag for lowercase query parameter keys
+     .body<BodyType>({ name: "example" });
    ```
 
 3. **Sending the Request**
@@ -223,7 +226,7 @@ interface SimpleResponse<T> {
 
 ## Examples
 
-### SimpleFetch Post Request
+### Post Request
 
 ```typeScript
 const response = await simple("https://api.example.com/resource")
@@ -260,6 +263,22 @@ try {
     error instanceof Error ? error.message : "An unknown error occurred",
   );
 }
+```
+
+### More Examples
+
+```typescript
+const userId = 1;
+const requestBody = { name: "Updated Name" };
+
+const response = await simple(`https://api.example.com/users/${userId}`)
+  .headers({ Authorization: "Bearer token" })
+  .params({ include: "posts" })
+  .body(requestBody)
+  .put<ExpectedReturnType>();
+
+console.log("Updated user:", response.data);
+
 ```
 
 ---
