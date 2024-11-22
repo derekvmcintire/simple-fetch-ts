@@ -108,7 +108,7 @@ import { simpleFetch } from "simple-fetch-ts";
  * @throws Will throw an error if the fetch fails or the response is not OK.
  */
 const response = await simpleFetch<ExpectedReturnType[]>(
-  "https://api.example.com/resource"
+  "https://api.example.com/resource",
 );
 if (data === null) {
   console.log("No data found, handling gracefully.");
@@ -259,7 +259,7 @@ try {
   return parsedResponse;
 } catch (error: unknown) {
   throw new Error(
-    error instanceof Error ? error.message : "An unknown error occurred"
+    error instanceof Error ? error.message : "An unknown error occurred",
   );
 }
 ```
@@ -307,12 +307,12 @@ export class SimpleFetchRequestError extends Error {
     public url: string,
     public status?: number,
     public statusText?: string,
-    public responseBody?: any
+    public responseBody?: any,
   ) {
     super(
       `${method} request to ${url} failed with status ${status ?? "unknown"}: ${
         statusText ?? "No status text"
-      }`
+      }`,
     );
     this.name = "SimpleFetchRequestError";
   }
@@ -334,7 +334,7 @@ export class InvalidURLError extends Error {
    */
   constructor(url: string) {
     super(
-      `A valid URL is required, received: ${url}. Ensure the URL starts with "http://" or "https://".`
+      `A valid URL is required, received: ${url}. Ensure the URL starts with "http://" or "https://".`,
     );
     this.name = "InvalidURLError";
   }
@@ -376,7 +376,7 @@ import { SimpleResponse } from "../../types";
  */
 export const tsFetch = async <T>(
   url: string,
-  requestHeaders: HeadersInit = {}
+  requestHeaders: HeadersInit = {},
 ): Promise<SimpleResponse<T>> => {
   try {
     const response = await fetch(url, {
@@ -393,7 +393,7 @@ export const tsFetch = async <T>(
         url,
         response.status,
         response.statusText,
-        errorText
+        errorText,
       );
     }
 
@@ -408,7 +408,7 @@ export const tsFetch = async <T>(
       throw error; // Rethrow for consistent handling upstream
     }
     throw new Error(
-      error instanceof Error ? error.message : "An unknown error occurred"
+      error instanceof Error ? error.message : "An unknown error occurred",
     );
   }
 };
@@ -438,8 +438,8 @@ As part of maintaining high-quality standards, **`simple-fetch-ts`** ensures rob
 
 ## Test Coverage Report
 
-| **File**                 | **% Stmts** | **% Branch** | **% Funcs** | **% Lines** | **Uncovered Line #s** |
-|--------------------------|-------------|--------------|-------------|-------------|-----------------------|
+| **File**                  | **% Stmts** | **% Branch** | **% Funcs** | **% Lines** | **Uncovered Line #s** |
+| ------------------------- | ----------- | ------------ | ----------- | ----------- | --------------------- |
 | **All files**             | 96.41%      | 83.16%       | 88.37%      | 96.19%      |                       |
 | **builder**               | 100%        | 100%         | 100%        | 100%        |                       |
 | **errors**                | 100%        | 83.33%       | 100%        | 100%        |                       |
@@ -457,7 +457,6 @@ As part of maintaining high-quality standards, **`simple-fetch-ts`** ensures rob
 | **utility**               | 94.59%      | 93.75%       | 100%        | 93.93%      |                       |
 | - get-content-type.ts     | 90.9%       | 100%         | 100%        | 90%         | Line 26               |
 | - url-helpers.ts          | 96.15%      | 89.47%       | 100%        | 95.65%      | Line 58               |
-
 
 #### Observations
 
