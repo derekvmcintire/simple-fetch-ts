@@ -84,9 +84,9 @@ import { simple } from "simple-fetch-ts";
 
 ---
 
-## SimpleFetch
+## simpleFetch
 
-If you want an inflexible, but quick way to make a simple fetch request, you can use simpleTsFetch. simpleFetch skips the response object and returns your parsed
+If you want an inflexible, but quick way to make a simple fetch request, you can use simpleFetch. simpleFetch skips the response object and returns your parsed
 data directly. It uses the same fetch helper as the factory function, handling errors internally.
 
 ```typescript
