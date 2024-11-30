@@ -232,17 +232,16 @@ const response = await simple("https://api.example.com/resource")
   .body({ name: "example", location: "example" })
   .post<ExpectedReturnType>(); // no need to set { "Content-Type": "application/json" } if there is a body, it will automatically be set
 
-console.log("Data:", response.data);
-console.log("Status:", response.status);
-console.log("Headers:", response.headers);
+console.log("Data: ", response.data);
+console.log("Status: ", response.status);
+console.log("Headers: ", response.headers);
 ```
 
 ### Equivelant Code Using Native Fetch
 
 ```typescript
-const url = "https://api.example.com/resource";
 try {
-  const response = await fetch(url, {
+  const response = await fetch("https://api.example.com/resource", {
     method: "POST",
     body: JSON.stringify({ name: "example", location: "example" }),
     headers: { "Content-Type": "application/json" },
@@ -256,7 +255,9 @@ try {
 
   const parsedResponse: ExpectedReturnType = await response.json();
 
-  return parsedResponse;
+  console.log("Data: ", parsedResponse);
+  console.log("Status: ", response.status);
+  console.log("Headers: ", response.headers);
 } catch (error: unknown) {
   throw new Error(
     error instanceof Error ? error.message : "An unknown error occurred",
