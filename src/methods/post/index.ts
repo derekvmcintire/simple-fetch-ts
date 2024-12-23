@@ -12,7 +12,7 @@ import { getContentType } from "../../utility/get-content-type";
  * @param url - The URL to send the request to.
  * @param requestBody - The data to be sent as the request body.
  * @param requestHeaders - Optional headers to include with the request.
- * @returns A promise that resolves with the response data, status, and headers.
+ * @returns A promise that resolves with a SimpleResponse object.
  * @throws Will throw an error if the fetch fails or the response status is not OK.
  */
 export const tsPost = async <T>(
@@ -57,6 +57,7 @@ export const tsPost = async <T>(
       data,
       status: response.status,
       headers: response.headers,
+      raw: response,
     };
   } catch (error: unknown) {
     if (error instanceof SimpleFetchRequestError) {

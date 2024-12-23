@@ -7,7 +7,7 @@ import { SimpleResponse } from "../../types";
  * @template T - The type of the expected response data.
  * @param url - The URL to fetch data from.
  * @param requestHeaders - Optional headers to be sent with the request.
- * @returns A promise that resolves with the fetched data, status, and headers.
+ * @returns A promise that resolves with a SimpleResponse object.
  * @throws Will throw an error if the fetch fails or the response is not OK.
  */
 export const tsFetch = async <T>(
@@ -38,6 +38,7 @@ export const tsFetch = async <T>(
       data,
       status: response.status,
       headers: response.headers,
+      raw: response,
     };
   } catch (error: unknown) {
     if (error instanceof SimpleFetchRequestError) {

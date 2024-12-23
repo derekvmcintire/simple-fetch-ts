@@ -7,7 +7,7 @@ import { SimpleResponse } from "../../types";
  * @template T - The type of the expected response data.
  * @param url - The URL to send the request to.
  * @param requestHeaders - Optional headers to be sent with the request.
- * @returns A promise that resolves with the response status and headers.
+ * @returns A promise that resolves with a SimpleResponse object.
  * @throws Will throw an error if the fetch fails or the response is not OK.
  */
 export const tsDelete = async <T>(
@@ -38,6 +38,7 @@ export const tsDelete = async <T>(
       data,
       status: response.status,
       headers: response.headers,
+      raw: response,
     };
   } catch (error: unknown) {
     if (error instanceof SimpleFetchRequestError) {
