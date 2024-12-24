@@ -417,15 +417,11 @@ export const tsFetch = async <T>(
 
 ---
 
-## Logging
-
-The `SimpleBuilder` class allows you to configure HTTP requests using a fluent builder pattern. One of the configurable options is a custom logger function that can be passed to handle errors and log request details.
-
-### Logger Configuration
+## Logger Configuration
 
 The logger can be customized by passing a function that matches the signature `(message: string, error: any) => void`. This function will be called whenever an error occurs during a request execution.
 
-#### Default Logger
+### Default Logger
 
 By default, the `SimpleBuilder` uses `console.error` as the logger function:
 
@@ -435,7 +431,7 @@ new SimpleBuilder(url: string, defaultHeaders: HeadersInit = {}, logger: (messag
 
 This means that if no logger is provided, errors will be logged to the console.
 
-#### Custom Logger
+### Custom Logger
 
 To provide a custom logger, simply pass a logger function when instantiating the `SimpleBuilder`:
 
@@ -448,7 +444,7 @@ const customLogger = (message: string, error: any) => {
 const builder = new SimpleBuilder("https://api.example.com", {}, customLogger);
 ```
 
-#### Logger Signature
+### Logger Signature
 
 The logger function you provide should have the following signature:
 
@@ -459,7 +455,7 @@ The logger function you provide should have the following signature:
 - **`message`**: A string containing a description of the request and its status (e.g., method, URL).
 - **`error`**: The error object caught during the request execution (if any).
 
-#### Example of Logger Integration
+### Example of Logger Integration
 
 Here’s how you can integrate a custom logger:
 
@@ -481,7 +477,7 @@ const builder = new SimpleBuilder(
 
 In this example, the `log` method of the `fileLogger` object is used to handle logging.
 
-#### Error Handling with Logging
+### Error Handling with Logging
 
 Whenever an error occurs during an HTTP request, the logger will be invoked with the message and error details. This occurs in the `handleRequest` method of `SimpleBuilder`:
 
@@ -491,7 +487,7 @@ this.logger(`Error with ${method} request to ${this.url}:`, error);
 
 This ensures that all errors related to HTTP requests are logged, providing visibility into failed requests.
 
-#### Example Usage
+### Example Usage
 
 ```typescript
 const builder = new SimpleBuilder(
@@ -510,7 +506,7 @@ builder
   .catch((error) => console.error("Request failed:", error));
 ```
 
-#### Benefits of Custom Logging
+### Benefits of Custom Logging
 
 - **Customizable Behavior**: Tailor the logging to your needs (e.g., logging to a file, external service, or tracking system).
 - **Error Tracking**: Log detailed information about failed requests, making it easier to diagnose issues.
