@@ -108,7 +108,7 @@ import { simpleFetch } from "simple-fetch-ts";
  * @throws Will throw an error if the fetch fails or the response is not OK.
  */
 const response = await simpleFetch<ExpectedReturnType[]>(
-  "https://api.example.com/resource",
+  "https://api.example.com/resource"
 );
 if (data === null) {
   console.log("No data found, handling gracefully.");
@@ -260,7 +260,7 @@ try {
   console.log("Headers: ", response.headers);
 } catch (error: unknown) {
   throw new Error(
-    error instanceof Error ? error.message : "An unknown error occurred",
+    error instanceof Error ? error.message : "An unknown error occurred"
   );
 }
 ```
@@ -308,12 +308,12 @@ export class SimpleFetchRequestError extends Error {
     public url: string,
     public status?: number,
     public statusText?: string,
-    public responseBody?: any,
+    public responseBody?: any
   ) {
     super(
       `${method} request to ${url} failed with status ${status ?? "unknown"}: ${
         statusText ?? "No status text"
-      }`,
+      }`
     );
     this.name = "SimpleFetchRequestError";
   }
@@ -335,7 +335,7 @@ export class InvalidURLError extends Error {
    */
   constructor(url: string) {
     super(
-      `A valid URL is required, received: ${url}. Ensure the URL starts with "http://" or "https://".`,
+      `A valid URL is required, received: ${url}. Ensure the URL starts with "http://" or "https://".`
     );
     this.name = "InvalidURLError";
   }
@@ -377,7 +377,7 @@ import { SimpleResponse } from "../../types";
  */
 export const tsFetch = async <T>(
   url: string,
-  requestHeaders: HeadersInit = {},
+  requestHeaders: HeadersInit = {}
 ): Promise<SimpleResponse<T>> => {
   try {
     const response = await fetch(url, {
@@ -394,7 +394,7 @@ export const tsFetch = async <T>(
         url,
         response.status,
         response.statusText,
-        errorText,
+        errorText
       );
     }
 
@@ -409,13 +409,112 @@ export const tsFetch = async <T>(
       throw error; // Rethrow for consistent handling upstream
     }
     throw new Error(
-      error instanceof Error ? error.message : "An unknown error occurred",
+      error instanceof Error ? error.message : "An unknown error occurred"
     );
   }
 };
 ```
 
 ---
+
+## Logging
+
+The `SimpleBuilder` class allows you to configure HTTP requests using a fluent builder pattern. One of the configurable options is a custom logger function that can be passed to handle errors and log request details.
+
+### Logger Configuration
+
+The logger can be customized by passing a function that matches the signature `(message: string, error: any) => void`. This function will be called whenever an error occurs during a request execution.
+
+#### Default Logger
+
+By default, the `SimpleBuilder` uses `console.error` as the logger function:
+
+```typescript
+new SimpleBuilder(url: string, defaultHeaders: HeadersInit = {}, logger: (message: string, error: any) => void = console.error);
+```
+
+This means that if no logger is provided, errors will be logged to the console.
+
+#### Custom Logger
+
+To provide a custom logger, simply pass a logger function when instantiating the `SimpleBuilder`:
+
+```typescript
+const customLogger = (message: string, error: any) => {
+  // Custom log behavior (e.g., sending logs to a remote server)
+  console.log(message, error);
+};
+
+const builder = new SimpleBuilder("https://api.example.com", {}, customLogger);
+```
+
+#### Logger Signature
+
+The logger function you provide should have the following signature:
+
+```typescript
+(message: string, error: any) => void
+```
+
+- **`message`**: A string containing a description of the request and its status (e.g., method, URL).
+- **`error`**: The error object caught during the request execution (if any).
+
+#### Example of Logger Integration
+
+Here’s how you can integrate a custom logger:
+
+```typescript
+// Example: Using a custom logger that logs to a file
+const fileLogger = {
+  log: (message: string, error: any) => {
+    // Log to a file or remote server
+    fs.appendFileSync("logs.txt", `${message} - ${error}\n`);
+  },
+};
+
+const builder = new SimpleBuilder(
+  "https://api.example.com",
+  {},
+  fileLogger.log
+);
+```
+
+In this example, the `log` method of the `fileLogger` object is used to handle logging.
+
+#### Error Handling with Logging
+
+Whenever an error occurs during an HTTP request, the logger will be invoked with the message and error details. This occurs in the `handleRequest` method of `SimpleBuilder`:
+
+```typescript
+this.logger(`Error with ${method} request to ${this.url}:`, error);
+```
+
+This ensures that all errors related to HTTP requests are logged, providing visibility into failed requests.
+
+#### Example Usage
+
+```typescript
+const builder = new SimpleBuilder(
+  "https://api.example.com",
+  {},
+  (message, error) => {
+    // Custom logger implementation
+    console.log(`Custom log: ${message}`);
+    console.error(error);
+  }
+);
+
+builder
+  .fetch()
+  .then((response) => console.log(response))
+  .catch((error) => console.error("Request failed:", error));
+```
+
+#### Benefits of Custom Logging
+
+- **Customizable Behavior**: Tailor the logging to your needs (e.g., logging to a file, external service, or tracking system).
+- **Error Tracking**: Log detailed information about failed requests, making it easier to diagnose issues.
+- **Seamless Integration**: Works with any logger that adheres to the expected signature `(message: string, error: any) => void`.
 
 ## Test Coverage
 

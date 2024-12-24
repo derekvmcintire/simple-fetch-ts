@@ -17,15 +17,22 @@ export class SimpleBuilder {
   private requestBody: unknown = null;
   private requestHeaders: HeadersInit = {};
   private requestParams: string = "";
+  private logger: (message: string, error: any) => void;
 
   /**
    * Constructs a SimpleBuilder instance with a base URL and optional default headers.
    * @param url - The base URL for the request.
    * @param defaultHeaders - Default headers to include in every request.
+   * @param logger - Optional custom logger function.
    */
-  constructor(url: string, defaultHeaders: HeadersInit = {}) {
+  constructor(
+    url: string,
+    defaultHeaders: HeadersInit = {},
+    logger: (message: string, error: any) => void = console.error,
+  ) {
     this.url = url;
     this.requestHeaders = defaultHeaders;
+    this.logger = logger;
   }
 
   /**
@@ -116,7 +123,7 @@ export class SimpleBuilder {
     try {
       return await requestFn();
     } catch (error) {
-      console.error(`Error with ${method} request to ${this.url}:`, error); // @TODO allow logger configuration
+      this.logger(`Error with ${method} request to ${this.url}:`, error);
       throw error;
     }
   }
