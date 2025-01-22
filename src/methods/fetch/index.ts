@@ -13,11 +13,13 @@ import { SimpleResponse } from "../../types";
 export const tsFetch = async <T>(
   url: string,
   requestHeaders: HeadersInit = {},
+  signal?: AbortSignal,
 ): Promise<SimpleResponse<T>> => {
   try {
     const response = await fetch(url, {
       method: "GET",
       headers: requestHeaders,
+      signal,
     });
 
     if (!response.ok) {

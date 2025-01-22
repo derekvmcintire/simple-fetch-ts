@@ -19,6 +19,7 @@ export const tsPost = async <T>(
   url: string,
   requestBody: any,
   requestHeaders: HeadersInit = {},
+  signal?: AbortSignal,
 ): Promise<SimpleResponse<T>> => {
   const contentType = getContentType(requestHeaders).toLowerCase();
 
@@ -35,6 +36,7 @@ export const tsPost = async <T>(
       method: "POST",
       body,
       headers: requestHeaders,
+      signal,
     });
 
     if (!response.ok) {
