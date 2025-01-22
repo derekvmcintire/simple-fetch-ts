@@ -16,6 +16,7 @@ export const tsPut = async <T>(
   url: string,
   requestBody: any,
   requestHeaders: HeadersInit = {},
+  signal?: AbortSignal,
 ): Promise<SimpleResponse<T>> => {
   const contentType = getContentType(requestHeaders).toLowerCase();
 
@@ -32,6 +33,7 @@ export const tsPut = async <T>(
       method: "PUT",
       body,
       headers: requestHeaders,
+      signal,
     });
 
     if (!response.ok) {

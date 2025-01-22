@@ -19,6 +19,7 @@ export const tsPatch = async <T>(
   url: string,
   requestBody: any,
   requestHeaders: HeadersInit = {},
+  signal?: AbortSignal,
 ): Promise<SimpleResponse<T>> => {
   const contentType = getContentType(requestHeaders).toLowerCase();
 
@@ -35,6 +36,7 @@ export const tsPatch = async <T>(
       method: "PATCH",
       body,
       headers: requestHeaders,
+      signal,
     });
 
     if (!response.ok) {

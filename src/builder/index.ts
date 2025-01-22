@@ -17,15 +17,21 @@ export class SimpleBuilder {
   private requestBody: unknown = null;
   private requestHeaders: HeadersInit = {};
   private requestParams: string = "";
+  private useAbortController: boolean = true;
 
   /**
    * Constructs a SimpleBuilder instance with a base URL and optional default headers.
    * @param url - The base URL for the request.
    * @param defaultHeaders - Default headers to include in every request.
    */
-  constructor(url: string, defaultHeaders: HeadersInit = {}) {
+  constructor(
+    url: string,
+    defaultHeaders: HeadersInit = {},
+    useAbortController: boolean = true,
+  ) {
     this.url = url;
     this.requestHeaders = defaultHeaders;
+    this.useAbortController = useAbortController;
   }
 
   /**
@@ -127,9 +133,11 @@ export class SimpleBuilder {
    * @returns A promise resolving to the response of the GET request.
    */
   async fetch<T>(): Promise<SimpleResponse<T>> {
-    const fullUrl = this.buildUrl();
+    const signal = this.useAbortController
+      ? new AbortController().signal
+      : undefined;
     return this.handleRequest(
-      () => tsFetch<T>(fullUrl, this.requestHeaders),
+      () => tsFetch<T>(this.buildUrl(), this.requestHeaders, signal),
       "GET",
     );
   }
@@ -140,8 +148,17 @@ export class SimpleBuilder {
    * @returns A promise resolving to the response of the POST request.
    */
   async post<T>(): Promise<SimpleResponse<T>> {
+    const signal = this.useAbortController
+      ? new AbortController().signal
+      : undefined;
     return this.handleRequest(
-      () => tsPost<T>(this.buildUrl(), this.requestBody, this.requestHeaders),
+      () =>
+        tsPost<T>(
+          this.buildUrl(),
+          this.requestBody,
+          this.requestHeaders,
+          signal,
+        ),
       "POST",
     );
   }
@@ -152,8 +169,17 @@ export class SimpleBuilder {
    * @returns A promise resolving to the response of the PUT request.
    */
   async put<T>(): Promise<SimpleResponse<T>> {
+    const signal = this.useAbortController
+      ? new AbortController().signal
+      : undefined;
     return this.handleRequest(
-      () => tsPut<T>(this.buildUrl(), this.requestBody, this.requestHeaders),
+      () =>
+        tsPut<T>(
+          this.buildUrl(),
+          this.requestBody,
+          this.requestHeaders,
+          signal,
+        ),
       "PUT",
     );
   }
@@ -164,8 +190,17 @@ export class SimpleBuilder {
    * @returns A promise resolving to the response of the PATCH request.
    */
   async patch<T>(): Promise<SimpleResponse<T>> {
+    const signal = this.useAbortController
+      ? new AbortController().signal
+      : undefined;
     return this.handleRequest(
-      () => tsPatch<T>(this.buildUrl(), this.requestBody, this.requestHeaders),
+      () =>
+        tsPatch<T>(
+          this.buildUrl(),
+          this.requestBody,
+          this.requestHeaders,
+          signal,
+        ),
       "PATCH",
     );
   }
@@ -176,8 +211,11 @@ export class SimpleBuilder {
    * @returns A promise resolving to the response of the DELETE request.
    */
   async delete<T>(): Promise<SimpleResponse<T>> {
+    const signal = this.useAbortController
+      ? new AbortController().signal
+      : undefined;
     return this.handleRequest(
-      () => tsDelete<T>(this.buildUrl(), this.requestHeaders),
+      () => tsDelete<T>(this.buildUrl(), this.requestHeaders, signal),
       "DELETE",
     );
   }

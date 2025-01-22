@@ -13,11 +13,13 @@ import { SimpleResponse } from "../../types";
 export const tsDelete = async <T>(
   url: string,
   requestHeaders: HeadersInit = {},
+  signal?: AbortSignal,
 ): Promise<SimpleResponse<T>> => {
   try {
     const response = await fetch(url, {
       method: "DELETE",
       headers: { ...requestHeaders },
+      signal,
     });
 
     if (!response.ok) {
