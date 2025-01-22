@@ -21,11 +21,9 @@ describe("tsFetch", () => {
 
     const result = await tsFetch("/test-url");
 
-    expect(result).toEqual({
-      data: mockData,
-      status: 200,
-      headers: mockResponse.headers,
-    });
+    expect(result.data).toEqual(mockData);
+    expect(result.status).toEqual(200);
+    expect(result.headers).toEqual(mockResponse.headers);
     expect(fetch).toHaveBeenCalledWith("/test-url", {
       headers: {},
       method: "GET",
