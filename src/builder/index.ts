@@ -18,6 +18,7 @@ export class SimpleBuilder {
   private requestHeaders: HeadersInit = {};
   private requestParams: string = "";
   private useAbortController: boolean = true;
+  private privateAbortController?: AbortController;
 
   /**
    * Constructs a SimpleBuilder instance with a base URL and optional default headers.
@@ -32,6 +33,11 @@ export class SimpleBuilder {
     this.url = url;
     this.requestHeaders = defaultHeaders;
     this.useAbortController = useAbortController;
+  }
+
+  abortController(controller: AbortController): this {
+    this.privateAbortController = controller;
+    return this;
   }
 
   /**
@@ -133,9 +139,12 @@ export class SimpleBuilder {
    * @returns A promise resolving to the response of the GET request.
    */
   async fetch<T>(): Promise<SimpleResponse<T>> {
-    const signal = this.useAbortController
+    const signal = this.privateAbortController
+      ? this.privateAbortController.signal
+      : this.useAbortController
       ? new AbortController().signal
       : undefined;
+
     return this.handleRequest(
       () => tsFetch<T>(this.buildUrl(), this.requestHeaders, signal),
       "GET",
@@ -148,9 +157,12 @@ export class SimpleBuilder {
    * @returns A promise resolving to the response of the POST request.
    */
   async post<T>(): Promise<SimpleResponse<T>> {
-    const signal = this.useAbortController
+    const signal = this.privateAbortController
+      ? this.privateAbortController.signal
+      : this.useAbortController
       ? new AbortController().signal
       : undefined;
+
     return this.handleRequest(
       () =>
         tsPost<T>(
@@ -169,9 +181,12 @@ export class SimpleBuilder {
    * @returns A promise resolving to the response of the PUT request.
    */
   async put<T>(): Promise<SimpleResponse<T>> {
-    const signal = this.useAbortController
+    const signal = this.privateAbortController
+      ? this.privateAbortController.signal
+      : this.useAbortController
       ? new AbortController().signal
       : undefined;
+      
     return this.handleRequest(
       () =>
         tsPut<T>(
@@ -190,9 +205,12 @@ export class SimpleBuilder {
    * @returns A promise resolving to the response of the PATCH request.
    */
   async patch<T>(): Promise<SimpleResponse<T>> {
-    const signal = this.useAbortController
+    const signal = this.privateAbortController
+      ? this.privateAbortController.signal
+      : this.useAbortController
       ? new AbortController().signal
       : undefined;
+      
     return this.handleRequest(
       () =>
         tsPatch<T>(
@@ -211,9 +229,12 @@ export class SimpleBuilder {
    * @returns A promise resolving to the response of the DELETE request.
    */
   async delete<T>(): Promise<SimpleResponse<T>> {
-    const signal = this.useAbortController
+    const signal = this.privateAbortController
+      ? this.privateAbortController.signal
+      : this.useAbortController
       ? new AbortController().signal
       : undefined;
+      
     return this.handleRequest(
       () => tsDelete<T>(this.buildUrl(), this.requestHeaders, signal),
       "DELETE",
